@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Login from "./components/Login/index";
+import { useMutation, gql } from "@apollo/client";
 
-function App() {
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+    }
+  }
+`;
+
+export default function App() {
+  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+
+  const handleLogin = async (username, password) => {
+    try {
+      const response = await login({
+        variables: {
+          username,
+          password,
+        },
+      });
+      console.log("Login successful, token:", response.data.login.token);
+    } catch (err) {
+      console.error("Login error:", err);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Login handleLogin={handleLogin} />
     </div>
   );
 }
-
-export default App;
