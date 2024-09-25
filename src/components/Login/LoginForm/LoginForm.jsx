@@ -1,10 +1,15 @@
 import React from "react";
-import "./styles.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import {
+  Form,
+  InputsContainer,
+  Input,
+  Button,
+  ErrorMessage,
+} from "./styles";
 
 export default function LoginForm({ handleLogin }) {
-
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -21,9 +26,9 @@ export default function LoginForm({ handleLogin }) {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <div className="inputsContainer">
-        <input
+    <Form onSubmit={formik.handleSubmit}>
+      <InputsContainer>
+        <Input
           id="username"
           name="username"
           type="text"
@@ -34,12 +39,12 @@ export default function LoginForm({ handleLogin }) {
           required
         />
         {formik.touched.username && formik.errors.username ? (
-          <div className="error">{formik.errors.username}</div>
+          <ErrorMessage>{formik.errors.username}</ErrorMessage>
         ) : null}
-      </div>
+      </InputsContainer>
 
-      <div className="inputsContainer">
-        <input
+      <InputsContainer>
+        <Input
           id="password"
           name="password"
           type="password"
@@ -50,12 +55,12 @@ export default function LoginForm({ handleLogin }) {
           required
         />
         {formik.touched.password && formik.errors.password ? (
-          <div className="error">{formik.errors.password}</div>
+          <ErrorMessage>{formik.errors.password}</ErrorMessage>
         ) : null}
+      </InputsContainer>
+      <div>
+        <Button type="submit">Entrar</Button>
       </div>
-      <div className="divButton">
-        <button type="submit">Entrar</button>
-      </div>
-    </form>
+    </Form>
   );
 }

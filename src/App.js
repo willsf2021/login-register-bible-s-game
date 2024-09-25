@@ -1,5 +1,8 @@
 import React from "react";
 import Login from "./components/Login/index";
+import Register from "./components/Register/index";
+import "./Global.css";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 const LOGIN_MUTATION = gql`
@@ -29,6 +32,7 @@ export default function App() {
 
   return (
     <div className="App">
+      {/* <Register /> */}
       <Login handleLogin={handleLogin} />
     </div>
   );

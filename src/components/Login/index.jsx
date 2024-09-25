@@ -1,28 +1,32 @@
 import React from "react";
 import LoginForm from "./LoginForm/LoginForm";
 import Logo from "../../assets/logo-vetor.png";
-import "./styles.css";
+import {
+  LoginPage,
+  DivHeader,
+  DivMain,
+  DivFooter,
+  CadastroLink,
+} from "./styles";
 
-
-
-export default function Login({handleLogin}) {
-
+export default function Login({ handleLogin }) {
   return (
-    <div className="loginPage">
-      <div className="divHeader">
+    <LoginPage>
+      <DivHeader>
         <img src={Logo} alt="Logo do Jogo" />
-      </div>
-      <div className="divMain">
+      </DivHeader>
+      <DivMain>
         <h1>Login</h1>
         <p>
           Colabore conosco. Digite abaixo seu usuário e senha para começar a
           cadastrar suas perguntas.
         </p>
-        <LoginForm handleLogin = {handleLogin}/>
-      </div>
-      <div className="divFooter">
+        <LoginForm handleLogin={handleLogin} />
+        <CadastroLink href="">Cadastre-se</CadastroLink>
+      </DivMain>
+      <DivFooter>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </div>
-    </div>
+      </DivFooter>
+    </LoginPage>
   );
 }
