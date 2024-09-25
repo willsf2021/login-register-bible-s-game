@@ -7,7 +7,7 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "/graphql",
+  uri: "http://jogodabiblia.com/graphql",
   cache: new InMemoryCache(),
 });
 
