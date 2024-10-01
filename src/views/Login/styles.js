@@ -66,3 +66,19 @@ export const DivFooter = styled.div`
     font-size: 12px;
   }
 `;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  row-gap: 17px;
+`;
+
+export const Button = styled.button`
+  background: radial-gradient(circle, #547b96 50%, #517590 100%);
+  padding: 8px 24px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font: 500 20px "Raleway", sans-serif;
+  float:right;
+`;
