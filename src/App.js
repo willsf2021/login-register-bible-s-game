@@ -1,11 +1,8 @@
 import React from "react";
 import Login from "./views/Login/index";
+import Register from "./components/Register/index";
 import GlobalStyle from "./styles";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
   uri: "https://jogodabiblia.com/graphql",
@@ -17,7 +14,8 @@ export default function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <GlobalStyle />
-        <Login />
+        <Register />
+        {/* <Login /> */}
       </div>
     </ApolloProvider>
   );

@@ -6,4 +6,9 @@ export default createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+
+  body {
+    font-family: "Raleway", sans-serif;
+    height: 100vh;
+  }
 `;

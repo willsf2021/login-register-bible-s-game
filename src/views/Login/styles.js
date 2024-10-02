@@ -6,7 +6,6 @@ export const LoginPage = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: "Raleway", sans-serif;
 `;
 
 export const DivHeader = styled.div`
@@ -26,18 +25,6 @@ export const DivMain = styled.div`
   flex-direction: column;
   row-gap: 17px;
   flex: 1;
-
-  h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #858585;
-  }
-
-  p {
-    font-size: 14px;
-    font-weight: 600;
-    color: #858585;
-  }
 `;
 
 export const CadastroLink = styled.a`
@@ -80,5 +67,5 @@ export const Button = styled.button`
   border-radius: 5px;
   color: white;
   font: 500 20px "Raleway", sans-serif;
-  float:right;
+  float: right;
 `;

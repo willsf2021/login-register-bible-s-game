@@ -14,6 +14,8 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../services/api";
 import { useFormik } from "formik";
 import Input from "../../components/Input";
+import Title from "../../components/Title";
+import Paragraph from "../../components/Paragraph/index";
 
 export default function Login() {
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION),
@@ -28,9 +30,9 @@ export default function Login() {
         login({
           variables: {
             username: values.username,
-            password: values.password
-          }
-        })
+            password: values.password,
+          },
+        });
       },
     });
 
@@ -50,16 +52,28 @@ export default function Login() {
         <img src={Logo} alt="Logo do Jogo" />
       </DivHeader>
       <DivMain>
-        <h1>Login</h1>
-        <p>
-          Colabore conosco. Digite abaixo seu usuário e senha para começar a
-          cadastrar suas perguntas.
-        </p>
+        <Title title="Login" />
+        <Paragraph
+          content={
+            "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
+          }
+        />
         <Form onSubmit={formik.handleSubmit}>
-          <Input name="username" placeholder="username ou email" formik={formik} />
-          <Input name="password" type="password" placeholder="senha" formik={formik} />
+          <Input
+            name="username"
+            placeholder="username ou email"
+            formik={formik}
+          />
+          <Input
+            name="password"
+            type="password"
+            placeholder="senha"
+            formik={formik}
+          />
           <div>
-            <Button type="submit">{loading ? "Carregando..." : "Entrar"}</Button>
+            <Button type="submit">
+              {loading ? "Carregando..." : "Entrar"}
+            </Button>
           </div>
         </Form>
         <CadastroLink href="">Cadastre-se</CadastroLink>

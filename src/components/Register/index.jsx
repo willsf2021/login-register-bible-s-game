@@ -1,3 +1,5 @@
+import RegisterForm from "./RegisterForm";
+
 export default function Cadastro() {
-  return <h1>Página de cadastro</h1>;
+  return <RegisterForm />;
 }
