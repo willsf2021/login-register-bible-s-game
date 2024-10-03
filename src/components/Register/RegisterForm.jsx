@@ -14,19 +14,62 @@ import {
 import { Form, Button } from "../../views/Login/styles";
 import Title from "../Title";
 import Paragraph from "../Paragraph/index";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+
+const REGISTER_USER = gql`
+  mutation cadastrarUsuario(
+    $email: String!
+    $password: String!
+    $username: String!
+    $isStaff: Boolean!
+  ) {
+    cadastrarUsuario(
+      email: $email
+      password: $password
+      username: $username
+      isStaff: $isStaff
+    ) {
+      usuario {
+        email
+        id
+        isActive
+        isStaff
+        isSuperuser
+        pontuacao
+        username
+      }
+    }
+  }
+`;
 
 export default function RegisterForm() {
+  const [cadastrarUsuario, { data, loading, error }] =
+    useMutation(REGISTER_USER);
+
   const formik = useFormik({
     initialValues: {
       username: "",
       email: "",
-      age: "",
       password: "",
       terms: false,
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Formulário enviado:", values);
+      cadastrarUsuario({
+        variables: {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          isStaff: false,
+        },
+      })
+        .then((response) => {
+          console.log("Usuário cadastrado com sucesso", response.data);
+        })
+        .catch((err) => {
+          console.error("Erro ao cadastrar usuário", err);
+        });
     },
   });
   return (
@@ -77,7 +120,9 @@ export default function RegisterForm() {
               Li e concordo com os <a href="#">Termos de Uso</a>
             </label>
           </CheckboxContainer>
-          <span><Button type="submit">Cadastrar</Button></span>
+          <span>
+            <Button type="submit">Cadastrar</Button>
+          </span>
         </Form>
       </DivMain>
     </RegisterContainer>
