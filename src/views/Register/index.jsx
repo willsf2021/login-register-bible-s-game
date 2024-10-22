@@ -19,7 +19,6 @@ import Paragraph from "../../components/Paragraph/index";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 
-// Definindo a mutação GraphQL
 const REGISTER_USER = gql`
   mutation cadastrarUsuario($novoUsuario: UsuarioInput!) {
     cadastrarUsuario(novoUsuario: $novoUsuario) {
@@ -38,7 +37,7 @@ export default function RegisterForm() {
   const formik = useFormik({
     initialValues: {
       name: "",
-      phone: "", // Mantenha a consistência do nome aqui
+      phone: "",
       isWhatsapp: false,
       email: "",
       username: "",
@@ -57,9 +56,8 @@ export default function RegisterForm() {
         isWhatsapp: values.isWhatsapp,
       };
 
-      // Chama a mutação com o objeto novoUsuario
       cadastrarUsuario({
-        variables: { novoUsuario: requestData }, // Passa novoUsuario diretamente
+        variables: { novoUsuario: requestData },
       })
         .then((response) => {
           console.log("Usuário cadastrado com sucesso", response.data);
@@ -121,8 +119,8 @@ export default function RegisterForm() {
             formik={formik}
           />
           <StyledInput
-            name="phone" // Alterado para "phone"
-            type="text" // Alterado para "text" para aceitar números com formato
+            name="phone"
+            type="text"
             placeholder="telefone (ex: +55 11 99999-9999)"
             formik={formik}
           />
