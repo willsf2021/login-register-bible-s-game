@@ -6,7 +6,8 @@ export default styled.div`
   row-gap: 8px;
 
   input{
-    height: 55px;
+    
+  height: 55px;
   border: 1px solid #727376;
   border-radius: 5px;
   font: 500 16px "Lato", sans-serif;

@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
-import validationSchema from "../../views/Login/validationSchema";
-import StyledInput from "../../components/Input";
+import validationSchema from "../Login/validationSchema";
+import StyledInput from "../../components/Input/index";
 import Logo from "../../assets/logo-vetor.png";
 import {
   RegisterContainer,
@@ -10,34 +10,22 @@ import {
   DivMain,
   CheckboxContainer,
   ContainerTitlePara,
+  CheckboxContainerWpp,
+  StyledIsWhatsappLabel,
 } from "./styles";
-import { Form, Button } from "../../views/Login/styles";
-import Title from "../Title";
-import Paragraph from "../Paragraph/index";
+import { Form, Button } from "../Login/styles";
+import Title from "../../components/Title";
+import Paragraph from "../../components/Paragraph/index";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 
+// Definindo a mutação GraphQL
 const REGISTER_USER = gql`
-  mutation cadastrarUsuario(
-    $email: String!
-    $password: String!
-    $username: String!
-    $isStaff: Boolean!
-  ) {
-    cadastrarUsuario(
-      email: $email
-      password: $password
-      username: $username
-      isStaff: $isStaff
-    ) {
+  mutation cadastrarUsuario($novoUsuario: UsuarioInput!) {
+    cadastrarUsuario(novoUsuario: $novoUsuario) {
       usuario {
         email
         id
-        isActive
-        isStaff
-        isSuperuser
-        pontuacao
-        username
       }
     }
   }
@@ -49,29 +37,48 @@ export default function RegisterForm() {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      name: "",
+      phone: "", // Mantenha a consistência do nome aqui
+      isWhatsapp: false,
       email: "",
+      username: "",
       password: "",
+      confirmPassword: "",
       terms: false,
     },
     validationSchema,
     onSubmit: (values) => {
+      const requestData = {
+        name: values.name,
+        phone: values.phone,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        isWhatsapp: values.isWhatsapp,
+      };
+
+      // Chama a mutação com o objeto novoUsuario
       cadastrarUsuario({
-        variables: {
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          isStaff: false,
-        },
+        variables: { novoUsuario: requestData }, // Passa novoUsuario diretamente
       })
         .then((response) => {
           console.log("Usuário cadastrado com sucesso", response.data);
         })
         .catch((err) => {
           console.error("Erro ao cadastrar usuário", err);
+          if (err.graphQLErrors) {
+            err.graphQLErrors.forEach(({ message }) => {
+              console.error("GraphQL Error:", message);
+            });
+          }
         });
     },
   });
+
+  const handleWhatsappChange = () => {
+    formik.setFieldValue("isWhatsapp", !formik.values.isWhatsapp);
+  };
+
   return (
     <RegisterContainer>
       <DivHeader>
@@ -90,6 +97,12 @@ export default function RegisterForm() {
             formik={formik}
           />
           <StyledInput
+            name="name"
+            type="text"
+            placeholder="nome"
+            formik={formik}
+          />
+          <StyledInput
             name="email"
             type="email"
             placeholder="email"
@@ -102,18 +115,32 @@ export default function RegisterForm() {
             formik={formik}
           />
           <StyledInput
-            name="password"
+            name="confirmPassword"
             type="password"
             placeholder="confirme a sua senha"
             formik={formik}
           />
           <StyledInput
-            name="whatsapp"
-            type="number"
-            placeholder="whatsapp"
+            name="phone" // Alterado para "phone"
+            type="text" // Alterado para "text" para aceitar números com formato
+            placeholder="telefone (ex: +55 11 99999-9999)"
             formik={formik}
           />
-
+          <StyledIsWhatsappLabel>
+            O número acima é WhatsApp?
+          </StyledIsWhatsappLabel>
+          <CheckboxContainerWpp>
+            <span className="text yes">Não</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={formik.values.isWhatsapp}
+                onChange={handleWhatsappChange}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className="text no">Sim</span>
+          </CheckboxContainerWpp>
           <CheckboxContainer>
             <StyledInput name="terms" type="checkbox" formik={formik} />
             <label htmlFor="terms">
@@ -121,7 +148,9 @@ export default function RegisterForm() {
             </label>
           </CheckboxContainer>
           <span>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit" disabled={loading}>
+              Cadastrar
+            </Button>
           </span>
         </Form>
       </DivMain>
