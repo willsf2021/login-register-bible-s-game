@@ -68,4 +68,5 @@ export const Button = styled.button`
   color: white;
   font: 500 20px "Raleway", sans-serif;
   float: right;
+  cursor: pointer;
 `;

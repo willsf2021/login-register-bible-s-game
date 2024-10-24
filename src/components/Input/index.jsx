@@ -7,8 +7,9 @@ export default function StyledInput({
   type = "text",
   placeholder,
 }) {
+  const hasError = formik.touched[name] && formik.errors[name];
   return (
-    <Container>
+    <Container hasError={hasError}>
       <input
         id={name}
         name={name}

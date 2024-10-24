@@ -4,6 +4,7 @@ export const RegisterContainer = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 375px;
 `;
 
 export const DivHeader = styled.div`
@@ -45,12 +46,17 @@ export const CheckboxContainer = styled.div`
       box-shadow: none;
     }
   }
-  font-size: 14px;
-
-  column-gap: 8px;
   display: flex;
+  font-size: 14px;
+  justify-content: flex-start;
   align-items: center;
-  width: 176px;
+  width: auto;
+  position: relative;
+  label {
+    position: absolute;
+    left: 40px;
+    top: 20px;
+  }
 `;
 
 export const ContainerTitlePara = styled.div`
@@ -117,7 +123,6 @@ export const CheckboxContainerWpp = styled.div`
     color: #547b96;
   }
 
-  /* Estilo do texto quando o checkbox está checked */
   input:checked ~ .no {
     color: #ccc;
   }

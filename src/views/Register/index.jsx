@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
-import validationSchema from "../Login/validationSchema";
+import validationSchema from "./validationSchema";
 import StyledInput from "../../components/Input/index";
 import Logo from "../../assets/logo-vetor.png";
 import {
@@ -140,7 +140,12 @@ export default function RegisterForm() {
             <span className="text no">Sim</span>
           </CheckboxContainerWpp>
           <CheckboxContainer>
-            <StyledInput name="terms" type="checkbox" formik={formik} />
+            <StyledInput
+              name="terms"
+              type="checkbox"
+              formik={formik}
+              errortype="checkbox"
+            />
             <label htmlFor="terms">
               Li e concordo com os <a href="#">Termos de Uso</a>
             </label>

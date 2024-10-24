@@ -1,5 +1,5 @@
 function Routes() {
-  return <Routes></Routes>;
+  return;
 }
 
 export default Routes;
