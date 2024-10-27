@@ -5,6 +5,7 @@ export const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 375px;
+  margin: 0 auto;
 `;
 
 export const DivHeader = styled.div`

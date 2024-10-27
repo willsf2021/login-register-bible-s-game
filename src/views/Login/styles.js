@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../theme.js";
 
 export const LoginPage = styled.div`
   height: 100vh;
@@ -9,7 +10,11 @@ export const LoginPage = styled.div`
 `;
 
 export const DivHeader = styled.div`
-  background: radial-gradient(circle, #547b96 35%, #3b5568 100%);
+  background: radial-gradient(
+    circle,
+    ${colors.gradient.lighterBlue} 35%,
+    ${colors.gradient.darkerBlue} 100%
+  );
   padding: 24px 0px;
   text-align: center;
   box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
@@ -29,11 +34,11 @@ export const DivMain = styled.div`
 
 export const CadastroLink = styled.a`
   text-decoration: none;
-  color: #858585;
+  color: ${colors.primary.links};
   transition: all 0.3s ease;
 
   &:visited {
-    color: #858585;
+    color: ${colors.primary.textColor};
   }
 
   &:hover {
@@ -61,7 +66,11 @@ export const Form = styled.form`
 `;
 
 export const Button = styled.button`
-  background: radial-gradient(circle, #547b96 50%, #517590 100%);
+  background: radial-gradient(
+    circle,
+    ${colors.gradient.lighterBlue} 50%,
+    ${colors.gradient.darkerBlueButton} 100%
+  );
   padding: 8px 24px;
   border: none;
   border-radius: 5px;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../theme";
 
 export default styled.div.withConfig({
   shouldForwardProp: (prop) => !["hasError"].includes(prop),
@@ -9,16 +10,16 @@ export default styled.div.withConfig({
 
   input {
     height: 55px;
-    border: 1px solid #727376;
+    border: 1px solid ${colors.primary.borderColor};
     border-radius: 5px;
     font: 500 16px "Lato", sans-serif;
     padding-left: 16px;
-    color: #547b96;
+    color: ${colors.primary.lighterBlue};
 
     ${(props) =>
       props.hasError &&
       `
-      border: 2px solid  #ff6b6b;;
+      border: 2px solid ${colors.primary.redError};
     `}
 
     &:focus {
@@ -27,23 +28,23 @@ export default styled.div.withConfig({
       ${(props) =>
         props.hasError &&
         `
-      border: 2px solid  #ff6b6b;
+      border: 2px solid  ${colors.primary.redError};
     `}
       border-radius: 5px;
       background: linear-gradient(white, white) padding-box,
         linear-gradient(to right, #547b96, #547b96), border-box;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) inset;
     }
+  }
 
-    &:valid {
-      border: 2px solid #547b96;
-      ${(props) =>
-        props.hasError &&
-        `
+  &:valid {
+    border: 2px solid #547b96;
+    ${(props) =>
+      props.hasError &&
+      `
       border: 2px solid  #ff6b6b;
     `}
-      background-color: hsla(205, 28%, 46%, 0.05);
-    }
+    background-color: hsla(205, 28%, 46%, 0.05);
   }
 
   .error {

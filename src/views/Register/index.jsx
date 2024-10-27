@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
 import StyledInput from "../../components/Input/index";
@@ -31,8 +31,8 @@ const REGISTER_USER = gql`
 `;
 
 export default function RegisterForm() {
-  const [cadastrarUsuario, { data, loading, error }] =
-    useMutation(REGISTER_USER);
+  const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
+  const [errorMessage, setErrorMessage] = useState(null); // Estado para mensagem de erro
 
   const formik = useFormik({
     initialValues: {
@@ -46,7 +46,7 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const requestData = {
         name: values.name,
         phone: values.phone,
@@ -56,20 +56,30 @@ export default function RegisterForm() {
         isWhatsapp: values.isWhatsapp,
       };
 
-      cadastrarUsuario({
-        variables: { novoUsuario: requestData },
-      })
-        .then((response) => {
-          console.log("Usuário cadastrado com sucesso", response.data);
-        })
-        .catch((err) => {
-          console.error("Erro ao cadastrar usuário", err);
-          if (err.graphQLErrors) {
-            err.graphQLErrors.forEach(({ message }) => {
-              console.error("GraphQL Error:", message);
-            });
-          }
+      try {
+        await cadastrarUsuario({
+          variables: { novoUsuario: requestData },
         });
+        setErrorMessage(null);
+      } catch (err) {
+        if (err.graphQLErrors) {
+          err.graphQLErrors.forEach(({ message }) => {
+            if (message.includes("email")) {
+              setErrorMessage(
+                "Esse email já está em uso. Por favor, use outro."
+              );
+            } else if (message.includes("username")) {
+              setErrorMessage(
+                "Esse nome de usuário já está em uso. Por favor, escolha outro."
+              );
+            } else {
+              setErrorMessage("Erro ao cadastrar. Tente novamente.");
+            }
+          });
+        } else {
+          setErrorMessage("Erro ao cadastrar. Tente novamente.");
+        }
+      }
     },
   });
 
@@ -151,6 +161,7 @@ export default function RegisterForm() {
             </label>
           </CheckboxContainer>
           <span>
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <Button type="submit" disabled={loading}>
               Cadastrar
             </Button>
