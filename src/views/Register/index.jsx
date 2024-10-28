@@ -1,38 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
 import StyledInput from "../../components/Input/index";
 import Logo from "../../assets/logo-vetor.png";
-import {
-  RegisterContainer,
-  DivHeader,
-  StyledLogo,
-  DivMain,
-  CheckboxContainer,
-  ContainerTitlePara,
-  CheckboxContainerWpp,
-  StyledIsWhatsappLabel,
-} from "./styles";
+import { RegisterContainer } from "./styles";
 import { Form, Button } from "../Login/styles";
 import Title from "../../components/Title";
 import Paragraph from "../../components/Paragraph/index";
-import { gql } from "@apollo/client";
+import { REGISTER_USER } from "../../services/api";
 import { useMutation } from "@apollo/client";
-
-const REGISTER_USER = gql`
-  mutation cadastrarUsuario($novoUsuario: UsuarioInput!) {
-    cadastrarUsuario(novoUsuario: $novoUsuario) {
-      usuario {
-        email
-        id
-      }
-    }
-  }
-`;
 
 export default function RegisterForm() {
   const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
-  const [errorMessage, setErrorMessage] = useState(null); // Estado para mensagem de erro
 
   const formik = useFormik({
     initialValues: {
@@ -46,7 +25,7 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setFieldError }) => {
       const requestData = {
         name: values.name,
         phone: values.phone,
@@ -60,43 +39,29 @@ export default function RegisterForm() {
         await cadastrarUsuario({
           variables: { novoUsuario: requestData },
         });
-        setErrorMessage(null);
       } catch (err) {
         if (err.graphQLErrors) {
-          err.graphQLErrors.forEach(({ message }) => {
-            if (message.includes("email")) {
-              setErrorMessage(
-                "Esse email já está em uso. Por favor, use outro."
-              );
-            } else if (message.includes("username")) {
-              setErrorMessage(
-                "Esse nome de usuário já está em uso. Por favor, escolha outro."
-              );
-            } else {
-              setErrorMessage("Erro ao cadastrar. Tente novamente.");
-            }
+          err.graphQLErrors.forEach(({ message, extensions }) => {
+            const field = extensions?.field || "general";
+            setFieldError(field, message);
           });
         } else {
-          setErrorMessage("Erro ao cadastrar. Tente novamente.");
+          setFieldError("general", "Erro ao cadastrar. Tente novamente.");
         }
       }
     },
   });
 
-  const handleWhatsappChange = () => {
-    formik.setFieldValue("isWhatsapp", !formik.values.isWhatsapp);
-  };
-
   return (
     <RegisterContainer>
-      <DivHeader>
-        <StyledLogo src={Logo} />
-      </DivHeader>
-      <DivMain>
-        <ContainerTitlePara>
+      <header>
+        <img src={Logo} alt="Logo" />
+      </header>
+      <main>
+        <div className="titleParagraph">
           <Title title="Cadastre-se" />
           <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
-        </ContainerTitlePara>
+        </div>
         <Form onSubmit={formik.handleSubmit}>
           <StyledInput
             name="username"
@@ -134,22 +99,22 @@ export default function RegisterForm() {
             placeholder="telefone (ex: +55 11 99999-9999)"
             formik={formik}
           />
-          <StyledIsWhatsappLabel>
-            O número acima é WhatsApp?
-          </StyledIsWhatsappLabel>
-          <CheckboxContainerWpp>
+          <div className="labelWpp">O número acima é WhatsApp?</div>
+          <div className="containerWpp">
             <span className="text yes">Não</span>
             <label className="switch">
               <input
                 type="checkbox"
                 checked={formik.values.isWhatsapp}
-                onChange={handleWhatsappChange}
+                onChange={() => {
+                  formik.setFieldValue("isWhatsapp", !formik.values.isWhatsapp);
+                }}
               />
               <span className="slider"></span>
             </label>
             <span className="text no">Sim</span>
-          </CheckboxContainerWpp>
-          <CheckboxContainer>
+          </div>
+          <div className="checkbox">
             <StyledInput
               name="terms"
               type="checkbox"
@@ -159,15 +124,18 @@ export default function RegisterForm() {
             <label htmlFor="terms">
               Li e concordo com os <a href="#">Termos de Uso</a>
             </label>
-          </CheckboxContainer>
-          <span>
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <Button type="submit" disabled={loading}>
-              Cadastrar
-            </Button>
-          </span>
+          </div>
+          {formik.errors.general && (
+            <p style={{ color: "red" }}>{formik.errors.general}</p>
+          )}
+          <Button type="submit" disabled={loading}>
+            Cadastrar
+          </Button>
         </Form>
-      </DivMain>
+      </main>
+      <footer>
+        <p>Jogo da Bíblia &copy; 2022</p>
+      </footer>
     </RegisterContainer>
   );
 }

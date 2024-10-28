@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../assets/logo-vetor.png";
-import {
-  LoginPage,
-  DivHeader,
-  DivMain,
-  DivFooter,
-  CadastroLink,
-  Button,
-  Form,
-} from "./styles";
+import { LoginPage, Form, Button } from "./styles";
 import validationSchema from "./validationSchema";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../services/api";
@@ -19,30 +11,27 @@ import Paragraph from "../../components/Paragraph/index";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
-  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION),
-    formik = useFormik({
-      initialValues: {
-        username: "",
-        password: "",
-      },
-      validationSchema,
-      onSubmit: (values) => {
-        console.log("Solicitando login...", values);
-        login({
-          variables: {
-            username: values.username,
-            password: values.password,
-          },
-        }).catch((error) => {
-          console.error("Erro na mutation:", error);
-          if (error.message === "Please enter valid credentials") {
-            setLoginError("Usuário ou senha estão incorretos.");
-          } else {
-            setLoginError("Ocorreu um erro ao tentar fazer login.");
-          }
-        });
-      },
-    });
+  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("Solicitando login...", values);
+      login({
+        variables: {
+          username: values.username,
+          password: values.password,
+        },
+      }).catch((error) => {
+        console.error("Erro na mutation:", error);
+        setLoginError(error.message);
+      });
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -51,21 +40,17 @@ export default function Login() {
     }
     if (error) {
       console.error("Login falhou:", error);
-      if (error.message === "Please enter valid credentials") {
-        setLoginError("Usuário ou senha estão incorretos.");
-      } else {
-        setLoginError("Ocorreu um erro ao tentar fazer login.");
-      }
+      setLoginError(error.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error]);
 
   return (
     <LoginPage>
-      <DivHeader>
+      <header>
         <img src={Logo} alt="Logo do Jogo" />
-      </DivHeader>
-      <DivMain>
+      </header>
+      <main>
         <Title title="Login" />
         <Paragraph
           content={
@@ -93,11 +78,11 @@ export default function Login() {
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
 
-        <CadastroLink href="/register">Cadastre-se</CadastroLink>
-      </DivMain>
-      <DivFooter>
+        <a href="/register">Cadastre-se</a>
+      </main>
+      <footer>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </DivFooter>
+      </footer>
     </LoginPage>
   );
 }
