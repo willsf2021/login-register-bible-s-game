@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./views/Login/index";
-import Register from "./views/Register/index";
+import { BrowserRouter as Router } from "react-router-dom";
+import Routes from "src/services/Routes";
 import GlobalStyle from "./styles";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
@@ -14,12 +13,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <GlobalStyle />
       <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </div>
+        <Routes />
       </Router>
     </ApolloProvider>
   );

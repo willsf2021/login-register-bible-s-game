@@ -1,13 +1,14 @@
 import styled from "styled-components";
-import { colors } from "../../theme";
+import { colors } from "src/services/theme";
 
-export const RegisterContainer = styled.div`
+export default styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   width: 375px;
   margin: 0 auto;
   justify-content: space-between;
+  
   header {
     background: radial-gradient(
       circle,

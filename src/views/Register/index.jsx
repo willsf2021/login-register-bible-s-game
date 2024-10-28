@@ -1,13 +1,12 @@
 import React from "react";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
-import StyledInput from "../../components/Input/index";
-import Logo from "../../assets/logo-vetor.png";
-import { RegisterContainer } from "./styles";
-import { Form, Button } from "../Login/styles";
-import Title from "../../components/Title";
-import Paragraph from "../../components/Paragraph/index";
-import { REGISTER_USER } from "../../services/api";
+import StyledInput from "src/components/Input/index";
+import Logo from "src/assets/logo-vetor.png";
+import Container from "./styles";
+import Title from "src/components/Title";
+import Paragraph from "src/components/Paragraph/index";
+import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
 export default function RegisterForm() {
@@ -53,7 +52,7 @@ export default function RegisterForm() {
   });
 
   return (
-    <RegisterContainer>
+    <Container>
       <header>
         <img src={Logo} alt="Logo" />
       </header>
@@ -128,14 +127,14 @@ export default function RegisterForm() {
           {formik.errors.general && (
             <p style={{ color: "red" }}>{formik.errors.general}</p>
           )}
-          <Button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading}>
             Cadastrar
-          </Button>
+          </button>
         </Form>
       </main>
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>
       </footer>
-    </RegisterContainer>
+    </Container>
   );
 }

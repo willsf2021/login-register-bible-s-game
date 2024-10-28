@@ -1,12 +1,13 @@
 import styled from "styled-components";
-import { colors } from "../../theme.js";
+import { colors } from "src/services/theme";
 
-export const LoginPage = styled.div`
+export default styled.div`
   height: 100vh;
   width: 375px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   header {
     background: radial-gradient(
       circle,
@@ -21,6 +22,7 @@ export const LoginPage = styled.div`
       filter: drop-shadow(0px 8px 4px rgb(21, 21, 21, 0.5));
     }
   }
+
   main {
     padding: 24px;
     display: flex;
@@ -28,6 +30,7 @@ export const LoginPage = styled.div`
     row-gap: 17px;
     flex: 1;
   }
+  
   a {
     text-decoration: none;
     color: ${colors.primary.links};
@@ -45,6 +48,7 @@ export const LoginPage = styled.div`
       font-weight: normal;
     }
   }
+
   footer {
     text-align: center;
     padding-bottom: 24px;

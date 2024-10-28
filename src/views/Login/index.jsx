@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo-vetor.png";
-import { LoginPage, Form, Button } from "./styles";
+import Logo from "src/assets/logo-vetor.png";
+import Container, { Form, Button } from "./styles";
 import validationSchema from "./validationSchema";
 import { useMutation } from "@apollo/client";
-import { LOGIN_MUTATION } from "../../services/api";
+import { LOGIN_MUTATION } from "src/services/api";
 import { useFormik } from "formik";
-import Input from "../../components/Input";
-import Title from "../../components/Title";
-import Paragraph from "../../components/Paragraph/index";
+import Input from "src/components/Input";
+import Title from "src/components/Title";
+import Paragraph from "src/components/Paragraph/index";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
@@ -46,7 +46,7 @@ export default function Login() {
   }, [data, error]);
 
   return (
-    <LoginPage>
+    <Container>
       <header>
         <img src={Logo} alt="Logo do Jogo" />
       </header>
@@ -83,6 +83,6 @@ export default function Login() {
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>
       </footer>
-    </LoginPage>
+    </Container>
   );
 }

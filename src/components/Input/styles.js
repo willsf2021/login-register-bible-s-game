@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "../../theme";
+import { colors } from "src/services/theme";
 
 export default styled.div.withConfig({
   shouldForwardProp: (prop) => !["hasError"].includes(prop),
