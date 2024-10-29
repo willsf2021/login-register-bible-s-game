@@ -3,7 +3,6 @@ import { colors } from "src/services/theme";
 
 export default styled.div`
   height: 100vh;
-  width: 375px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -30,7 +29,7 @@ export default styled.div`
     row-gap: 17px;
     flex: 1;
   }
-  
+
   a {
     text-decoration: none;
     color: ${colors.primary.links};

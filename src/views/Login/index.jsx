@@ -78,7 +78,7 @@ export default function Login() {
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
 
-        <a href="/register">Cadastre-se</a>
+        <a href="/cadastro">Cadastre-se</a>
       </main>
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>

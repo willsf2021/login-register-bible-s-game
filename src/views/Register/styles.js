@@ -5,10 +5,9 @@ export default styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  width: 375px;
   margin: 0 auto;
-  justify-content: space-between;
-  
+  /* justify-content: space-between; */
+
   header {
     background: radial-gradient(
       circle,
@@ -34,10 +33,10 @@ export default styled.div`
     max-height: 100%;
     flex: 1;
 
-    form {
+    .containerButton {
       display: flex;
-      flex-direction: column;
-      flex: 1;
+      align-items: center;
+      justify-content: flex-end;
     }
   }
   div.checkbox {

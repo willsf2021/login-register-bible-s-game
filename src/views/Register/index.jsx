@@ -3,9 +3,10 @@ import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
 import StyledInput from "src/components/Input/index";
 import Logo from "src/assets/logo-vetor.png";
-import Container from "./styles";
 import Title from "src/components/Title";
 import Paragraph from "src/components/Paragraph/index";
+import Container from "./styles";
+import { Form, Button } from "../Login/styles";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
@@ -127,9 +128,11 @@ export default function RegisterForm() {
           {formik.errors.general && (
             <p style={{ color: "red" }}>{formik.errors.general}</p>
           )}
-          <button type="submit" disabled={loading}>
-            Cadastrar
-          </button>
+          <div className="containerButton">
+            <Button type="submit" disabled={loading}>
+              Cadastrar
+            </Button>
+          </div>
         </Form>
       </main>
       <footer>
