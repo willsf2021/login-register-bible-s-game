@@ -6,7 +6,9 @@ export default styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  /* justify-content: space-between; */
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: white;
 
   header {
     background: radial-gradient(
@@ -18,11 +20,22 @@ export default styled.div`
     padding: 24px 0px;
     text-align: center;
     box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
+    @media (min-width: 768px) {
+      position: relative;
+      padding: 0px 0px;
+      height: 100px;
+    }
   }
   img {
+    @media (min-width: 768px) {
+      top: 16px;
+      position: relative;
+      filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+      width: auto;
+    }
+    width: 96px;
     position: relative;
     bottom: 22px;
-    width: 96px;
     filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
   }
   main {
@@ -65,6 +78,10 @@ export default styled.div`
     flex-direction: column;
     row-gap: 8px;
     margin-bottom: 24px;
+    @media (min-width: 768px){
+      margin-bottom: 0px;
+
+    }
   }
   div.containerWpp {
     display: inline-flex;

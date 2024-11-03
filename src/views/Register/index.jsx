@@ -58,11 +58,11 @@ export default function RegisterForm() {
         <img src={Logo} alt="Logo" />
       </header>
       <main>
+        <Form onSubmit={formik.handleSubmit}>
         <div className="titleParagraph">
           <Title title="Cadastre-se" />
           <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
         </div>
-        <Form onSubmit={formik.handleSubmit}>
           <StyledInput
             name="username"
             type="text"

@@ -51,13 +51,13 @@ export default function Login() {
         <img src={Logo} alt="Logo do Jogo" />
       </header>
       <main>
+        <Form onSubmit={formik.handleSubmit}>
         <Title title="Login" />
         <Paragraph
           content={
             "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
           }
         />
-        <Form onSubmit={formik.handleSubmit}>
           <Input
             name="username"
             placeholder="username ou email"
@@ -69,16 +69,16 @@ export default function Login() {
             placeholder="senha"
             formik={formik}
           />
-          <div>
+          <div className="containerButton">
             <Button type="submit">
               {loading ? "Carregando..." : "Entrar"}
             </Button>
           </div>
+        <a href="/cadastro">Cadastre-se</a>
         </Form>
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
 
-        <a href="/cadastro">Cadastre-se</a>
       </main>
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>

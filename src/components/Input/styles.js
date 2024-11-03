@@ -15,6 +15,9 @@ export default styled.div.withConfig({
     font: 500 16px "Lato", sans-serif;
     padding-left: 16px;
     color: ${colors.primary.lighterBlue};
+    @media (min-width: 768px){
+      max-width: 400px;
+    }
 
     ${(props) =>
       props.hasError &&

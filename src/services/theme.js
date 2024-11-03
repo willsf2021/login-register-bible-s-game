@@ -4,6 +4,7 @@ export const colors = {
     switchButton: "#ccc",
     redError: " #ff6b6b",
     borderColor: "#727376",
+    backgroundDesktop: "#E5E5E5",
   },
   gradient: {
     lighterBlue: "#547b96",

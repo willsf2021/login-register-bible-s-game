@@ -4,4 +4,8 @@ export const StyledParagraph = styled.p`
   font-size: 14px;
   font-weight: 600;
   color: #858585;
+  @media (min-width: 768px) {
+    font-size: 18px;
+    max-width: 400px;
+  }
 `;

@@ -6,6 +6,9 @@ export default styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: white;
 
   header {
     background: radial-gradient(
@@ -16,9 +19,19 @@ export default styled.div`
     padding: 24px 0px;
     text-align: center;
     box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
+    @media (min-width: 768px) {
+      position: relative;
+      padding: 0px 0px;
+      height: 100px;
+    }
 
     img {
       filter: drop-shadow(0px 8px 4px rgb(21, 21, 21, 0.5));
+      @media (min-width: 768px) {
+        top: 16px;
+        position: relative;
+        filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+      }
     }
   }
 
@@ -28,6 +41,10 @@ export default styled.div`
     flex-direction: column;
     row-gap: 17px;
     flex: 1;
+    @media (min-width: 768px){
+      align-items: flex-start;
+      justify-content: center;
+    }
   }
 
   a {
@@ -62,6 +79,14 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   row-gap: 17px;
+  margin:  0 auto;
+  @media (min-width: 768px) {
+    width: 400px;
+    row-gap: 32px;
+    .containerButton {
+      max-width: 400px;
+    }
+  }
 `;
 
 export const Button = styled.button`
@@ -77,4 +102,9 @@ export const Button = styled.button`
   font: 500 20px "Raleway", sans-serif;
   float: right;
   cursor: pointer;
+  @media (min-width: 768px) {
+    width: 100%;
+    float: none;
+    padding: 12px 24px;
+  }
 `;
