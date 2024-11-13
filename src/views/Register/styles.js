@@ -5,7 +5,6 @@ export default styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   max-width: 700px;
   margin: 0 auto;
   background-color: white;
