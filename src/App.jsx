@@ -1,10 +1,30 @@
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "src/services/Routes";
 import GlobalStyle from "./styles";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+const httpLink = createHttpLink({
+  uri: "https://jogodabiblia.com/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("authToken");
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: "https://jogodabiblia.com/graphql",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

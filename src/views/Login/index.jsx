@@ -35,7 +35,9 @@ export default function Login() {
 
   useEffect(() => {
     if (data) {
+      const token = data.login.token;
       console.log("Login realizado com sucesso:", data);
+      localStorage.setItem('authToken', token)
       setLoginError(null);
     }
     if (error) {

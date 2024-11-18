@@ -18,3 +18,13 @@ export const REGISTER_USER = gql`
     }
   }
 `;
+
+export const GET_TEMAS = gql`
+  query GetTemas {
+    temas {
+      cor
+      id
+      nome
+    }
+  }
+`;
