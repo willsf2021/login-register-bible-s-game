@@ -41,7 +41,8 @@ export default styled.div`
     flex-direction: column;
     row-gap: 17px;
     flex: 1;
-    @media (min-width: 768px){
+    height: 100%;
+    @media (min-width: 768px) {
       align-items: flex-start;
       justify-content: center;
     }
@@ -79,7 +80,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   row-gap: 17px;
-  margin:  0 auto;
+  margin: 0 auto;
   @media (min-width: 768px) {
     width: 400px;
     row-gap: 32px;

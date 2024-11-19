@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "src/views/Home";
 import Login from "src/views/Login";
 import Register from "src/views/Register";
-import AddQuestions from "../views/addQuestions";
+import AddQuestions from "src/views/addQuestions";
 
 export default () => (
   <Routes>
