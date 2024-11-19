@@ -12,4 +12,8 @@ export default createGlobalStyle`
     height: 100vh;
     background-color: ${colors.primary.backgroundDesktop};
   }
+
+  textarea {
+    resize: none;
+  }
 `;

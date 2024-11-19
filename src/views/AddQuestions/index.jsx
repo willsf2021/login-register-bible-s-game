@@ -12,47 +12,45 @@ const AddQuestions = () => {
   if (loading) return <p>Carregando temas...</p>;
   if (error) return <p>Erro ao carregar temas: {error.message}</p>;
 
+  const addQuestionForm = () => {
+    const {
+      handleChange,
+      handleBlur,
+      values,
+      errors,
+      touched,
+      isSubmitting,
+      handleSubmit,
+    } = useFormik({
+      initialValues: {},
+    });
+  };
+
   return (
-    <div>
-      <h1>Temas do Backend</h1>
-      <ul>
-        {data.temas.map((tema) => (
-          <li key={tema.id}>{tema.nome}</li>
-        ))}
-      </ul>
-    </div>
+    <Container>
+      <Header />
+      <main>
+        <div className="titleParagraph">
+          <Title title="Adicionar Pergunta" />
+          <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
+        </div>
+        <form>
+          <select name="" id="">
+            {data.temas.map((tema) => {
+              return (
+                <option key={tema.id} value={tema.nome}>
+                  {tema.nome}{` ID - ${tema.id}`}
+                </option>
+              );
+            })}
+          </select>
+          <textarea name="" id="" placeholder="Pergunta"></textarea>
+        </form>
+      </main>
+      <footer>
+        <p>Jogo da Bíblia &copy; 2022</p>
+      </footer>
+    </Container>
   );
 };
-
 export default AddQuestions;
-
-// export default function AddQuestions() {
-//   const addQuestionForm = () => {
-//     const {handleChange,
-//       handleBlur,
-//       values,
-//       errors,
-//       touched,
-//       isSubmitting,
-//       handleSubmit} = useFormik({
-//       initialValues: {
-
-//       }
-//     })
-//   }
-
-//   return (
-//     <Container>
-//       <Header />
-//       <main>
-//         <div className="titleParagraph">
-//           <Title title="Adicionar Pergunta" />
-//           <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
-//         </div>
-//       </main>
-//       <footer>
-//         <p>Jogo da Bíblia &copy; 2022</p>
-//       </footer>
-//     </Container>
-//   );
-// }

@@ -24,6 +24,12 @@ export default styled.div`
         margin-bottom: 0px;
       }
     }
+
+    textarea,
+    input,
+    select {
+      width: 100%;
+    }
   }
   footer {
     text-align: center;
