@@ -36,16 +36,16 @@ export default styled.div`
   }
 
   main {
-    padding: 24px;
+    padding: 56px 24px 24px;
     display: flex;
     flex-direction: column;
     row-gap: 17px;
     flex: 1;
     height: 100%;
-    @media (min-width: 768px) {
+    /* @media (min-width: 768px) {
       align-items: flex-start;
       justify-content: center;
-    }
+    } */
   }
 
   a {
