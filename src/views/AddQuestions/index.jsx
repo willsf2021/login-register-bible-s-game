@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import { useQuery } from "@apollo/client";
-import { GET_TEMAS } from "../../services/api";
+import { GET_TEMAS } from "src/services/api";
 import Container, { Form, Button, ContainerLabelInput } from "./styles";
 import Header from "src/components/Header";
 import Title from "src/components/Title";
