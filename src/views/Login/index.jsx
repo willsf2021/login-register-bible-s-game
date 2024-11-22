@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import Input from "src/components/Input";
 import Title from "src/components/Title";
 import Paragraph from "src/components/Paragraph/index";
+import { Footer } from "../../components/Footer";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
@@ -83,9 +84,9 @@ export default function Login() {
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
       </main>
-      <footer>
+      <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </footer>
+      </Footer>
     </Container>
   );
 }

@@ -65,13 +65,4 @@ export default styled.div`
       font-weight: normal;
     }
   }
-
-  footer {
-    text-align: center;
-    padding-bottom: 24px;
-
-    p {
-      font-size: 12px;
-    }
-  }
 `;

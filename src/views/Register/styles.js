@@ -155,14 +155,6 @@ export default styled.div`
       color: ${colors.gradient.lighterBlue};
     }
   }
-
-  footer {
-    text-align: center;
-    padding-bottom: 24px;
-    p {
-      font-size: 12px;
-    }
-  }
   div.labelWpp {
     font-size: 14px;
     font-weight: 500;

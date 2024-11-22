@@ -8,6 +8,7 @@ import Paragraph from "src/components/Paragraph/index";
 import Container from "./styles";
 import { FormContainer } from "../../components/FormContainer";
 import { Button } from "../../components/Button";
+import { Footer } from "../../components/Footer";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
@@ -139,9 +140,9 @@ export default function RegisterForm() {
           </div>
         </FormContainer>
       </main>
-      <footer>
+      <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </footer>
+      </Footer>
     </Container>
   );
 }

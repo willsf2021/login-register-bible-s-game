@@ -5,6 +5,7 @@ import Container from "./styles";
 import Header from "src/components/Header";
 import Title from "src/components/Title";
 import Paragraph from "src/components/Paragraph/index";
+import { Footer } from "../../components/Footer";
 
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
