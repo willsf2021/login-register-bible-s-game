@@ -6,7 +6,8 @@ import Logo from "src/assets/logo-vetor.png";
 import Title from "src/components/Title";
 import Paragraph from "src/components/Paragraph/index";
 import Container from "./styles";
-import { Form, Button } from "../Login/styles";
+import { FormContainer } from "../../components/FormContainer";
+import { Button } from "../../components/Button";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
