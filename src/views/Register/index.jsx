@@ -6,7 +6,8 @@ import Logo from "src/assets/logo-vetor.png";
 import Title from "src/components/Title";
 import Paragraph from "src/components/Paragraph/index";
 import Container from "./styles";
-import { Form, Button } from "../Login/styles";
+import { FormContainer } from "../../components/FormContainer";
+import { Button } from "../../components/Button";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
@@ -25,14 +26,17 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: async ({name, phone, username, email, password, isWhatsapp}, { setFieldError }) => {
+    onSubmit: async (
+      { name, phone, username, email, password, isWhatsapp },
+      { setFieldError }
+    ) => {
       const requestData = {
         name,
         phone,
         username,
         email,
         password,
-        isWhatsapp
+        isWhatsapp,
       };
 
       try {
@@ -58,11 +62,11 @@ export default function RegisterForm() {
         <img src={Logo} alt="Logo" />
       </header>
       <main>
-        <Form onSubmit={formik.handleSubmit}>
-        <div className="titleParagraph">
-          <Title title="Cadastre-se" />
-          <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
-        </div>
+        <FormContainer onSubmit={formik.handleSubmit}>
+          <div className="titleParagraph">
+            <Title title="Cadastre-se" />
+            <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
+          </div>
           <StyledInput
             name="username"
             type="text"
@@ -133,7 +137,7 @@ export default function RegisterForm() {
               {loading ? "Carregando..." : "Cadastrar"}
             </Button>
           </div>
-        </Form>
+        </FormContainer>
       </main>
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>

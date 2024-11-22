@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Logo from "src/assets/logo-vetor.png";
-import Container, { Form, Button } from "./styles";
+import Container from "./styles";
+import { FormContainer } from "../../components/FormContainer";
+import { Button } from "../../components/Button";
 import validationSchema from "./validationSchema";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "src/services/api";
@@ -37,7 +39,7 @@ export default function Login() {
     if (data) {
       const token = data.login.token;
       console.log("Login realizado com sucesso:", data);
-      localStorage.setItem('authToken', token)
+      localStorage.setItem("authToken", token);
       setLoginError(null);
     }
     if (error) {
@@ -53,13 +55,13 @@ export default function Login() {
         <img src={Logo} alt="Logo do Jogo" />
       </header>
       <main>
-        <Form onSubmit={formik.handleSubmit}>
-        <Title title="Login" />
-        <Paragraph
-          content={
-            "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
-          }
-        />
+        <FormContainer onSubmit={formik.handleSubmit}>
+          <Title title="Login" />
+          <Paragraph
+            content={
+              "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
+            }
+          />
           <Input
             name="username"
             placeholder="username ou email"
@@ -76,11 +78,10 @@ export default function Login() {
               {loading ? "Carregando..." : "Entrar"}
             </Button>
           </div>
-        <a href="/cadastro">Cadastre-se</a>
-        </Form>
+          <a href="/cadastro">Cadastre-se</a>
+        </FormContainer>
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
-
       </main>
       <footer>
         <p>Jogo da Bíblia &copy; 2022</p>
