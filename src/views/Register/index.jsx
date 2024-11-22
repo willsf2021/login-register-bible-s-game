@@ -25,14 +25,14 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async ({name, phone, username, email, password, isWhatsapp}, { setFieldError }) => {
       const requestData = {
-        name: values.name,
-        phone: values.phone,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        isWhatsapp: values.isWhatsapp,
+        name,
+        phone,
+        username,
+        email,
+        password,
+        isWhatsapp
       };
 
       try {
@@ -130,7 +130,7 @@ export default function RegisterForm() {
           )}
           <div className="containerButton">
             <Button type="submit" disabled={loading}>
-              Cadastrar
+              {loading ? "Carregando..." : "Cadastrar"}
             </Button>
           </div>
         </Form>
