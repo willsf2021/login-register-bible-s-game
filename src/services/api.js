@@ -19,6 +19,17 @@ export const REGISTER_USER = gql`
   }
 `;
 
+
+export const REGISTER_QUESTION = gql`
+  mutation cadastrarPergunta($novaPergunta: PerguntaInput!) {
+    cadastrarPergunta(novaPergunta: $novaPergunta) {
+      pergunta {
+        id
+      }
+    }
+  }
+`;
+
 export const GET_TEMAS = gql`
   query GetTemas {
     temas {
