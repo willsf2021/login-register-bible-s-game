@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { colors } from "src/services/theme";
+
 
 export default styled.div`
   max-width: 700px;
-  background-color: white;
+  background-color: ${(props) => props.theme.primary.white};
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -44,49 +44,15 @@ export default styled.div`
   }
 `;
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  row-gap: 17px;
-  margin: 0 auto;
-  .containerButton {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  @media (min-width: 768px) {
-    width: 400px;
-    row-gap: 32px;
-    .containerButton {
-      max-width: 400px;
-    }
-  }
-`;
 
-export const Button = styled.button`
-  background: radial-gradient(
-    circle,
-    ${colors.gradient.lighterBlue} 50%,
-    ${colors.gradient.darkerBlueButton} 100%
-  );
-  padding: 8px 24px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font: 500 20px "Raleway", sans-serif;
-  float: right;
-  cursor: pointer;
-  @media (min-width: 768px) {
-    padding: 12px 24px;
-  }
-`;
+
 
 export const ContainerLabelInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   column-gap: 16px;
-  color: ${colors.primary.textColor};
+  color: ${(props) => props.theme.primary.textColor};
   input {
     appearance: none;
     display: none;
@@ -98,13 +64,13 @@ export const ContainerLabelInput = styled.div`
     display: inline-block;
     position: relative;
     border-radius: 50%;
-    border: 1px solid ${colors.primary.borderColor};
+    border: 1px solid ${(props) => props.theme.primary.borderColor};
     cursor: pointer;
   }
 
   input:checked + label.customRadio {
-    background-color: ${colors.gradient.lighterBlue};
-    border-color: ${colors.gradient.lighterBlue};
+    background-color: ${(props) => props.theme.gradient.lighterBlue};
+    border-color: ${(props) => props.theme.gradient.darkerBlue};
   }
 
   label.customRadio::after {
@@ -115,13 +81,13 @@ export const ContainerLabelInput = styled.div`
     transform: translate(-50%, -50%);
     height: 18px;
     width: 18px;
-    background-color: white;
+    background-color: ${(props) => props.theme.primary.white};
     border-radius: 50%;
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
   input:checked + label.customRadio::after {
-    background-color: ${colors.gradient.lighterBlue};
+    background-color: ${(props) => props.theme.gradient.lighterBlue};
     transform: translate(-50%, -50%) scale(0.6);
   }
 `;

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { useQuery } from "@apollo/client";
 import { GET_TEMAS } from "src/services/api";
-import Container, { Form, Button, ContainerLabelInput } from "./styles";
-import Header from "src/components/Header";
-import Title from "src/components/Title";
-import Paragraph from "src/components/Paragraph/index";
+import Container, { ContainerLabelInput } from "./styles";
+import { FormContainer } from "src/components/FormContainer";
+import { Button } from "src/components/Button";
+import { Header } from "src/components/Header";
+import { Title } from "src/components/Title";
+import { Paragraph } from "src/components/Paragraph/index";
 
 const AddQuestions = () => {
   const [concatenedReference, setConcatenedReference] = useState("");
@@ -70,7 +72,7 @@ const AddQuestions = () => {
           <p>Erro ao carregar temas: {error.message}</p>
         ) : (
           <>
-            <Form onSubmit={handleSubmit}>
+            <FormContainer onSubmit={handleSubmit}>
               <div className="titleParagraph">
                 <Title title="Adicionar Pergunta" />
                 <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
@@ -199,7 +201,7 @@ const AddQuestions = () => {
               <div className="containerButton">
                 <Button type="submit">Enviar</Button>
               </div>
-            </Form>
+            </FormContainer>
           </>
         )}
       </main>

@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { colors } from "src/services/theme.js";
 
 export default styled.button`
   background: radial-gradient(
     circle,
-    ${colors.gradient.lighterBlue} 50%,
-    ${colors.gradient.darkerBlueButton} 100%
+    ${(props) => props.theme.gradient.lighterBlue} 50%,
+    ${(props) => props.theme.gradient.darkerBlueButton} 100%
   );
   padding: 8px 24px;
   border: none;

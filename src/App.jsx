@@ -4,10 +4,12 @@ import {
   ApolloProvider,
   createHttpLink,
 } from "@apollo/client";
+import { ThemeProvider } from "styled-components";
 import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "src/services/Routes";
 import GlobalStyle from "./styles";
+import { colors } from "src/services/theme.js";
 
 const httpLink = createHttpLink({
   uri: "https://jogodabiblia.com/graphql",
@@ -31,10 +33,12 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <GlobalStyle />
-      <Router>
-        <Routes />
-      </Router>
+      <ThemeProvider theme={colors}>
+        <GlobalStyle />
+        <Router>
+          <Routes />
+        </Router>
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

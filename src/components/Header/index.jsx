@@ -2,7 +2,7 @@ import Container from "./styles";
 import Logo from "src/assets/logo-vetor.png";
 import MenuHamburger from "src/assets/menu-hamburger.svg";
 
-export default function Header() {
+export const Header = () => {
   return (
     <Container>
       <header>
@@ -15,4 +15,4 @@ export default function Header() {
       </header>
     </Container>
   );
-}
+};

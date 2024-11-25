@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "src/services/theme";
 
 export default styled.div`
   height: 100%;
@@ -7,13 +6,13 @@ export default styled.div`
   flex-direction: column;
   max-width: 700px;
   margin: 0 auto;
-  background-color: white;
+  background-color: ${(props) => props.theme.primary.white};
 
   header {
     background: radial-gradient(
       circle,
-      ${colors.gradient.lighterBlue} 35%,
-      ${colors.gradient.darkerBlue} 100%
+      ${(props) => props.theme.gradient.lighterBlue} 35%,
+      ${(props) => props.theme.gradient.darkerBlue} 100%
     );
     height: 56px;
     padding: 24px 0px;
@@ -29,13 +28,17 @@ export default styled.div`
     @media (min-width: 768px) {
       top: 16px;
       position: relative;
-      filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+      filter: drop-shadow(
+        0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+      );
       width: auto;
     }
     width: 96px;
     position: relative;
     bottom: 22px;
-    filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+    filter: drop-shadow(
+      0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+    );
   }
   main {
     display: flex;
@@ -77,9 +80,8 @@ export default styled.div`
     flex-direction: column;
     row-gap: 8px;
     margin-bottom: 24px;
-    @media (min-width: 768px){
+    @media (min-width: 768px) {
       margin-bottom: 0px;
-
     }
   }
   div.containerWpp {
@@ -92,7 +94,7 @@ export default styled.div`
       position: relative;
       width: 48px;
       height: 24px;
-      background-color: ${colors.primary.switchButton};
+      background-color: ${(props) => props.theme.primary.switchButton};
       border-radius: 15px;
       box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
       transition: background-color 0.3s ease-in-out;
@@ -111,8 +113,7 @@ export default styled.div`
       left: 2px;
       width: 20px;
       height: 20px;
-      background-color: white;
-      border-radius: 50%;
+      background-color: ${(props) => props.theme.primary.white};
       transition: all 0.3s ease-in-out;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       background-color: gray;
@@ -120,39 +121,39 @@ export default styled.div`
 
     .switch input:checked + .slider {
       left: 25px;
-      background-color: ${colors.gradient.lighterBlue};
+      background-color: ${(props) => props.theme.gradient.lighterBlue};
     }
 
     .text {
       font-size: 12px;
       font-weight: bold;
-      color: #333;
+      color: ${(props) => props.theme.primary.textColor};
     }
 
     .yes {
-      color: ${colors.primary.switchButton};
+      color: ${(props) => props.theme.primary.switchButton};
       margin-right: 0px;
     }
 
     .no {
       margin-left: 0px;
-      color: ${colors.gradient.lighterBlue};
+      color: ${(props) => props.theme.gradient.lighterBlue};
     }
 
     input:checked ~ .no {
-      color: ${colors.primary.switchButton};
+      color: ${(props) => props.theme.primary.switchButton};
     }
 
     input:checked ~ .yes {
-      color: ${colors.gradient.lighterBlue};
+      color: ${(props) => props.theme.gradient.lighterBlue};
     }
 
     input:not(:checked) ~ .yes {
-      color: ${colors.primary.switchButton};
+      color: ${(props) => props.theme.primary.switchButton};
     }
 
     input:not(:checked) ~ .no {
-      color: ${colors.gradient.lighterBlue};
+      color: ${(props) => props.theme.gradient.lighterBlue};
     }
   }
   div.labelWpp {

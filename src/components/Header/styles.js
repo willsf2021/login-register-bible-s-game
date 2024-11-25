@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "src/services/theme";
 
 export default styled.div`
   height: 100%;
@@ -9,13 +8,13 @@ export default styled.div`
   min-width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  background-color: white;
+  background-color: ${(props) => props.theme.primary.white};
 
   header {
     background: radial-gradient(
       circle,
-      ${colors.gradient.lighterBlue} 35%,
-      ${colors.gradient.darkerBlue} 100%
+      ${(props) => props.theme.gradient.lighterBlue} 35%,
+      ${(props) => props.theme.gradient.darkerBlue} 100%
     );
     height: 56px;
     padding: 24px 0px;
@@ -41,13 +40,17 @@ export default styled.div`
     @media (min-width: 768px) {
       top: 16px;
       position: relative;
-      filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+      filter: drop-shadow(
+        0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+      );
       width: auto;
     }
 
     width: 96px;
     position: relative;
     bottom: 22px;
-    filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+    filter: drop-shadow(
+      0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+    );
   }
 `;

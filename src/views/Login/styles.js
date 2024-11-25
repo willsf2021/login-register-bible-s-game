@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "src/services/theme";
 
 export default styled.div`
   height: 100vh;
@@ -8,13 +7,13 @@ export default styled.div`
   justify-content: space-between;
   max-width: 700px;
   margin: 0 auto;
-  background-color: white;
+  background-color: ${(props) => props.theme.primary.white};
 
   header {
     background: radial-gradient(
       circle,
-      ${colors.gradient.lighterBlue} 35%,
-      ${colors.gradient.darkerBlue} 100%
+      ${(props) => props.theme.gradient.lighterBlue} 35%,
+      ${(props) => props.theme.gradient.darkerBlue} 100%
     );
     padding: 24px 0px;
     text-align: center;
@@ -30,7 +29,9 @@ export default styled.div`
       @media (min-width: 768px) {
         top: 16px;
         position: relative;
-        filter: drop-shadow(0px 3px 0px ${colors.gradient.lighterBlue});
+        filter: drop-shadow(
+          0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+        );
       }
     }
   }
@@ -50,11 +51,11 @@ export default styled.div`
 
   a {
     text-decoration: none;
-    color: ${colors.primary.links};
+    color: ${(props) => props.theme.primary.links};
     transition: all 0.3s ease;
 
     &:visited {
-      color: ${colors.primary.textColor};
+      color: ${(props) => props.theme.primary.textColor};
     }
 
     &:hover {

@@ -1,11 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
-import StyledInput from "src/components/Input/index";
+import { Input } from "src/components/Input/index";
 import Logo from "src/assets/logo-vetor.png";
-import Title from "src/components/Title";
-import Paragraph from "src/components/Paragraph/index";
 import Container from "./styles";
+import { Title } from "src/components/Title";
+import { Paragraph } from "src/components/Paragraph/index";
 import { FormContainer } from "../../components/FormContainer";
 import { Button } from "../../components/Button";
 import { Footer } from "../../components/Footer";
@@ -68,40 +68,35 @@ export default function RegisterForm() {
             <Title title="Cadastre-se" />
             <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
           </div>
-          <StyledInput
+          <Input
             name="username"
             type="text"
             placeholder="username"
             formik={formik}
           />
-          <StyledInput
-            name="name"
-            type="text"
-            placeholder="nome"
-            formik={formik}
-          />
-          <StyledInput
+          <Input name="name" type="text" placeholder="nome" formik={formik} />
+          <Input
             name="email"
             type="email"
             placeholder="email"
             formik={formik}
           />
-          <StyledInput
+          <Input
             name="password"
             type="password"
             placeholder="digite uma senha"
             formik={formik}
           />
-          <StyledInput
+          <Input
             name="confirmPassword"
             type="password"
             placeholder="confirme a sua senha"
             formik={formik}
           />
-          <StyledInput
+          <Input
             name="phone"
             type="text"
-            placeholder="telefone (ex: +55 11 99999-9999)"
+            placeholder="11 98887-8886"
             formik={formik}
           />
           <div className="labelWpp">O número acima é WhatsApp?</div>
@@ -120,7 +115,7 @@ export default function RegisterForm() {
             <span className="text no">Sim</span>
           </div>
           <div className="checkbox">
-            <StyledInput
+            <Input
               name="terms"
               type="checkbox"
               formik={formik}

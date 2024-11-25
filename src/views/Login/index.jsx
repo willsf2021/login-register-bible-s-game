@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Logo from "src/assets/logo-vetor.png";
+import validationSchema from "./validationSchema";
 import Container from "./styles";
 import { FormContainer } from "../../components/FormContainer";
 import { Button } from "../../components/Button";
-import validationSchema from "./validationSchema";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "src/services/api";
 import { useFormik } from "formik";
-import Input from "src/components/Input";
-import Title from "src/components/Title";
-import Paragraph from "src/components/Paragraph/index";
+import { Input } from "src/components/Input";
+import { Title } from "src/components/Title";
+import { Paragraph } from "src/components/Paragraph/index";
 import { Footer } from "../../components/Footer";
 
 export default function Login() {
