@@ -40,20 +40,24 @@ export default function RegisterForm() {
         isWhatsapp,
       };
 
-      try {
-        await cadastrarUsuario({
-          variables: { novoUsuario: requestData },
-        });
-      } catch (err) {
-        if (err.graphQLErrors) {
-          err.graphQLErrors.forEach(({ message, extensions }) => {
-            const field = extensions?.field || "general";
-            setFieldError(field, message);
-          });
-        } else {
-          setFieldError("general", "Erro ao cadastrar. Tente novamente.");
+      const [cadastrarUsuario, { loading, data, error }] =
+        useMutation(REGISTER_USER);
+
+      useEffect(() => {
+        if (error) {
+          if (error.graphQLErrors) {
+            error.graphQLErrors.forEach(({ message, extensions }) => {
+              const field = extensions?.field || "general";
+              formik.setFieldError(field, message);
+            });
+          } else {
+            formik.setFieldError(
+              "general",
+              error.message || "Erro desconhecido."
+            );
+          }
         }
-      }
+      }, [error]);
     },
   });
 
