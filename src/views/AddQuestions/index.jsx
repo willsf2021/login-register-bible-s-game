@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { useQuery } from "@apollo/client";
+import { isReference, useQuery } from "@apollo/client";
 import { GET_TEMAS } from "src/services/api";
 import Container, { ContainerLabelInput } from "./styles";
 import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
-import { Paragraph } from "src/components/Paragraph/index";
+import { Paragraph } from "src/components/Paragraph/index"
+import { BibleRef } from "../../components/BibleRef";
 
 const AddQuestions = () => {
-  const [concatenedReference, setConcatenedReference] = useState("");
   const { loading, error, data } = useQuery(GET_TEMAS);
+
+  const [isReferenceComplete, setIsReferenceComplete] = useState("");
 
   const {
     handleChange,
@@ -36,32 +38,16 @@ const AddQuestions = () => {
     validationSchema: null,
     onSubmit: async (values, actions) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      actions.resetForm(); // Reseta o formulário após submissão
+      actions.resetForm();
     },
   });
 
-  // const handleChangeBook = (event) => {
-  //   const newBook = event.target.value;
-  //   const newReference = `${newBook} ${chapter}:${verse}`;
-  //   setConcatenedReference(newReference);
-  //   setFieldValue("referencia", newReference); // Atualiza o Formik
-  // };
+  // console.log(values);
 
-  // const handleChangeChapter = (event) => {
-  //   const newChapter = event.target.value;
-  //   const newReference = `${book} ${newChapter}:${verse}`;
-  //   setConcatenedReference(newReference);
-  //   setFieldValue("referencia", newReference); // Atualiza o Formik
-  // };
+  useEffect(() => {
+    setIsReferenceComplete(values.tipoResposta == "RLC" ? "RLC" : "");
+  }, [values.tipoResposta]);
 
-  // const handleChangeVerse = (event) => {
-  //   const newVerse = event.target.value;
-  //   const newReference = `${book} ${chapter}:${newVerse}`;
-  //   setConcatenedReference(newReference);
-  //   setFieldValue("referencia", newReference); // Atualiza o Formik
-  // };
-
-  console.log(values);
   return (
     <Container>
       <Header />
@@ -182,10 +168,7 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.referenciaBiblica === "true" ? (
-                <div>
-                  <h1>Inputs da Referência Bíblia</h1>
-                  <h2>Consumo de API da Bíblia</h2>
-                </div>
+                <BibleRef isReferenceComplete={isReferenceComplete} />
               ) : (
                 <div>
                   <textarea
