@@ -5,6 +5,7 @@ const URL = "https://biblia.filipelopes.me/api/v1/biblia/";
 export const fetchBooks = async () => {
   try {
     const response = await axios.get(`/api/books`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error: " + error);
