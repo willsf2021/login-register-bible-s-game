@@ -1,5 +1,5 @@
 import Container from "./styles";
 
-export const FormContainer = ({ children }) => {
-  return <Container>{children}</Container>;
+export const FormContainer = ({ children, onSubmit }) => {
+  return <Container onSubmit={onSubmit}>{children}</Container>;
 };

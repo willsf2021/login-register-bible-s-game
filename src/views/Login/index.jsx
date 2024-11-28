@@ -56,7 +56,12 @@ export default function Login() {
         <img src={Logo} alt="Logo do Jogo" />
       </header>
       <main>
-        <FormContainer onSubmit={formik.handleSubmit}>
+        <FormContainer
+          onSubmit={(event) => {
+            event.preventDefault();
+            formik.handleSubmit(event);
+          }}
+        >
           <Title title="Login" />
           <Paragraph
             content={
