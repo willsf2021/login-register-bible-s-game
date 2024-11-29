@@ -7,8 +7,9 @@ import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
-import { Paragraph } from "src/components/Paragraph/index"
-import { BibleRef } from "../../components/BibleRef";
+import { Paragraph } from "src/components/Paragraph/index";
+import { Footer } from "../../components/Footer";
+import { BibleRef } from "src/components/BibleRef";
 
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
@@ -188,9 +189,9 @@ const AddQuestions = () => {
           </>
         )}
       </main>
-      <footer>
+      <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </footer>
+      </Footer>
     </Container>
   );
 };
