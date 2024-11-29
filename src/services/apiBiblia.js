@@ -1,35 +1,37 @@
 import axios from "axios";
 
-const URL = "https://biblia.filipelopes.me/api/v1/biblia/";
+const api = axios.create({
+  baseURL: "/api/",
+});
 
 export const fetchBooks = async () => {
   try {
-    const response = await axios.get(`/api/books`);
-    return response.data;
+    const { data } = await api.get("/books");
+    return data;
   } catch (error) {
-    console.error("Error: " + error);
+    console.error("Error fetching books: ", error);
     throw error;
   }
 };
 
 export const fetchChapters = async (bookId) => {
   try {
-    const response = await axios.get(`/api/book/${bookId}/chapters`);
-    return response.data;
+    const { data } = await api.get(`/book/${bookId}/chapters`);
+    return data;
   } catch (error) {
-    console.error("Error: " + error);
+    console.error("Error fetching chapters: ", error);
     throw error;
   }
 };
 
 export const fetchVerses = async (bookId, chapterNumber) => {
   try {
-    const response = await axios.get(
-      `/api/book/${bookId}/chapter/${chapterNumber}/verses`
+    const { data } = await api.get(
+      `/book/${bookId}/chapter/${chapterNumber}/verses`
     );
-    return response.data;
+    return data;
   } catch (error) {
-    console.error("Error: " + error);
+    console.error("Error fetching verses: ", error);
     throw error;
   }
 };
