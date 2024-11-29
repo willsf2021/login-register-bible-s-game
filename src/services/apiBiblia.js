@@ -35,3 +35,22 @@ export const fetchVerses = async (bookId, chapterNumber) => {
     throw error;
   }
 };
+
+export const fetchCompleteReference = async (
+  bookAbrev,
+  chapterNumber,
+  verseNumber
+) => {
+  try {
+    const { data } = await api.get(`/verse`, {
+      params: {
+        q: `${bookAbrev} ${chapterNumber}:${verseNumber}`,
+        versao: "ARA",
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching verses: ", error);
+    throw error;
+  }
+};

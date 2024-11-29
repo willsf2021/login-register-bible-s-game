@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchBooks, fetchChapters, fetchVerses } from "src/services/apiBiblia";
+import {
+  fetchBooks,
+  fetchChapters,
+  fetchVerses,
+  fetchCompleteReference,
+} from "src/services/apiBiblia";
 import Container from "./styles";
 
 export const BibleRef = ({ isReferenceComplete }) => {
@@ -43,7 +48,7 @@ export const BibleRef = ({ isReferenceComplete }) => {
       }
       setChapters(temp);
     });
-  }, [query]);
+  }, [query.bookId]);
 
   const handleChapter = (event) => {
     const chapterNumber = event.target.value;
@@ -66,7 +71,7 @@ export const BibleRef = ({ isReferenceComplete }) => {
       }
       setVerses(temp);
     });
-  }, [query]);
+  }, [query.chapterNumber]);
 
   const handleVerse = (event) => {
     const verseNumber = event.target.value;
@@ -77,6 +82,27 @@ export const BibleRef = ({ isReferenceComplete }) => {
       };
     });
   };
+
+  useEffect(() => {
+    if (
+      !query.bookId ||
+      !query.chapterNumber ||
+      !query.verseNumber ||
+      isReferenceComplete == "RLC"
+    )
+      return;
+
+    fetchCompleteReference(
+      query.abrev,
+      query.chapterNumber,
+      query.verseNumber
+    ).then((response) => {
+      response.map((res) => {
+        console.log(res.texto);
+      });
+    });
+  }, [query]);
+
   return (
     <Container>
       <select name="books" id="books" onChange={handleBook}>
