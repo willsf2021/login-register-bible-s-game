@@ -6,17 +6,21 @@ import {
   fetchCompleteReference,
 } from "src/services/apiBiblia";
 import Container from "./styles";
+import { Paragraph } from "src/components/Paragraph/index";
 
-export const BibleRef = ({ isReferenceComplete }) => {
+export const BibleRef = ({ isReferenceComplete, setFieldValue }) => {
   const [books, setBooks] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
+
+  const [reference, setReference] = useState("");
   const [query, setQuery] = useState({
     bookId: "",
     abrev: "",
     chapterNumber: "",
     verseNumber: "",
   });
+
   useEffect(() => {
     fetchBooks().then((data) => {
       setBooks(data);
@@ -26,19 +30,21 @@ export const BibleRef = ({ isReferenceComplete }) => {
   const handleBook = (event) => {
     const bookId = event.target.value;
     const selectedBook = books.find((book) => book.id == bookId);
-    setQuery(() => {
-      return {
-        abrev: selectedBook.abrev,
-        bookId: bookId,
-        chapterNumber: "",
-        verseNumber: "",
-      };
-    });
+
+    setQuery(() => ({
+      abrev: selectedBook?.abrev || "",
+      bookId: bookId,
+      chapterNumber: "",
+      verseNumber: "",
+    }));
+
+    setChapters([]);
+    setVerses([]);
+    setFieldValue("referencia", "");
   };
 
   useEffect(() => {
     if (!query.bookId) return;
-    console.log(query);
 
     fetchChapters(query.bookId).then((total) => {
       total = Number(total);
@@ -52,17 +58,29 @@ export const BibleRef = ({ isReferenceComplete }) => {
 
   const handleChapter = (event) => {
     const chapterNumber = event.target.value;
+
     setQuery((prevState) => {
-      return {
+      const updatedQuery = {
         ...prevState,
         chapterNumber: chapterNumber,
+        verseNumber: "",
       };
+
+      setFieldValue(
+        "referencia",
+        `${updatedQuery.abrev} ${updatedQuery.chapterNumber}`
+      );
+
+      return updatedQuery;
     });
+
+    setVerses([]);
   };
 
   useEffect(() => {
-    if (!query.chapterNumber || !query.bookId || isReferenceComplete == "RLC")
+    if (!query.chapterNumber || !query.bookId || isReferenceComplete === "RLC")
       return;
+
     fetchVerses(query.bookId, query.chapterNumber).then((total) => {
       total = Number(total);
       const temp = [];
@@ -75,31 +93,34 @@ export const BibleRef = ({ isReferenceComplete }) => {
 
   const handleVerse = (event) => {
     const verseNumber = event.target.value;
+
     setQuery((prevState) => {
-      return {
+      const updatedQuery = {
         ...prevState,
         verseNumber: verseNumber,
       };
+
+      setFieldValue(
+        "referencia",
+        `${updatedQuery.abrev} ${updatedQuery.chapterNumber}:${updatedQuery.verseNumber}`
+      );
+      return updatedQuery;
     });
   };
-
   useEffect(() => {
     if (
       !query.bookId ||
       !query.chapterNumber ||
       !query.verseNumber ||
-      isReferenceComplete == "RLC"
+      isReferenceComplete === "RLC"
     )
       return;
-
     fetchCompleteReference(
       query.abrev,
       query.chapterNumber,
       query.verseNumber
     ).then((response) => {
-      response.map((res) => {
-        console.log(res.texto);
-      });
+      setReference(response[0]?.texto || "");
     });
   }, [query]);
 
@@ -107,37 +128,37 @@ export const BibleRef = ({ isReferenceComplete }) => {
     <Container>
       <select name="books" id="books" onChange={handleBook}>
         <option value="">Selecione um livro...</option>
-        {books.map((book) => {
-          return (
-            <option key={book.id} value={book.id}>
-              {book.nome}
-            </option>
-          );
-        })}
+        {books.map((book) => (
+          <option key={book.id} value={book.id}>
+            {book.nome}
+          </option>
+        ))}
       </select>
       <select name="chapters" id="chapters" onChange={handleChapter}>
         <option value="">Selecione um capítulo...</option>
-        {chapters.map((chapter) => {
-          return (
-            <option key={chapter} value={chapter}>
-              {chapter}
-            </option>
-          );
-        })}
+        {chapters.map((chapter) => (
+          <option key={chapter} value={chapter}>
+            {chapter}
+          </option>
+        ))}
       </select>
-      {isReferenceComplete == "RLC" ? (
+      {isReferenceComplete === "RLC" ? (
         ""
       ) : (
-        <select name="verses" id="verses" onChange={handleVerse}>
-          <option value="">Selecione um versículo...</option>
-          {verses.map((verse) => {
-            return (
+        <>
+          <select name="verses" id="verses" onChange={handleVerse}>
+            <option value="">Selecione um versículo...</option>
+            {verses.map((verse) => (
               <option key={verse} value={verse}>
                 {verse}
               </option>
-            );
-          })}
-        </select>
+            ))}
+          </select>
+
+          <div>
+            <Paragraph content={reference ? `"${reference}"` : ""} />
+          </div>
+        </>
       )}
     </Container>
   );

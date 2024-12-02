@@ -1,9 +1,9 @@
-import React from "react";
-import { useFormik } from "formik";
+import React, { useEffect } from "react";
 import validationSchema from "./validationSchema";
-import { Input } from "src/components/Input/index";
 import Logo from "src/assets/logo-vetor.png";
 import Container from "./styles";
+import { Input } from "src/components/Input/index";
+import { useFormik } from "formik";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
 import { FormContainer } from "../../components/FormContainer";
@@ -11,9 +11,29 @@ import { Button } from "../../components/Button";
 import { Footer } from "../../components/Footer";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterForm() {
-  const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
+  const navigate = useNavigate();
+  const [cadastrarUsuario, { data, loading, error }] =
+    useMutation(REGISTER_USER);
+
+  useEffect(() => {
+    if (data?.cadastrarUsuario?.usuario) {
+      toast.success("Cadastro realizado com sucesso!");
+      setTimeout(() => navigate("/login"), 2000);
+    } else if (error) {
+      if (error.graphQLErrors?.length > 0) {
+        error.graphQLErrors.forEach(({ message }) => {
+          toast.error(message);
+        });
+      } else {
+        toast.error("Erro ao realizar o cadastro. Tente novamente.");
+      }
+    }
+  }, [data, error, navigate]);
 
   const formik = useFormik({
     initialValues: {
@@ -27,37 +47,19 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: async (
-      { name, phone, username, email, password, isWhatsapp },
-      { setFieldError }
-    ) => {
-      const requestData = {
-        name,
-        phone,
-        username,
-        email,
-        password,
-        isWhatsapp,
-      };
-
-      const [cadastrarUsuario, { loading, data, error }] =
-        useMutation(REGISTER_USER);
-
-      useEffect(() => {
-        if (error) {
-          if (error.graphQLErrors) {
-            error.graphQLErrors.forEach(({ message, extensions }) => {
-              const field = extensions?.field || "general";
-              formik.setFieldError(field, message);
-            });
-          } else {
-            formik.setFieldError(
-              "general",
-              error.message || "Erro desconhecido."
-            );
-          }
-        }
-      }, [error]);
+    onSubmit: async (values) => {
+      await cadastrarUsuario({
+        variables: {
+          novoUsuario: {
+            name: values.name,
+            phone: values.phone,
+            isWhatsapp: values.isWhatsapp,
+            email: values.email,
+            username: values.username,
+            password: values.password,
+          },
+        },
+      });
     },
   });
 
@@ -142,6 +144,7 @@ export default function RegisterForm() {
       <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>
       </Footer>
+      <ToastContainer />{" "}
     </Container>
   );
 }

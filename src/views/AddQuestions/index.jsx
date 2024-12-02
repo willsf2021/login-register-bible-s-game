@@ -24,6 +24,7 @@ const AddQuestions = () => {
     touched,
     isSubmitting,
     handleSubmit,
+    setFieldValue,
   } = useFormik({
     initialValues: {
       tipoResposta: "", // MANAGED
@@ -43,7 +44,7 @@ const AddQuestions = () => {
     },
   });
 
-  // console.log(values);
+  console.log(values);
 
   useEffect(() => {
     setIsReferenceComplete(values.tipoResposta == "RLC" ? "RLC" : "");
@@ -169,7 +170,7 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.referenciaBiblica === "true" ? (
-                <BibleRef isReferenceComplete={isReferenceComplete} />
+                <BibleRef isReferenceComplete={isReferenceComplete} setFieldValue={setFieldValue}/>
               ) : (
                 <div>
                   <textarea

@@ -113,6 +113,7 @@ export default styled.div`
       left: 2px;
       width: 20px;
       height: 20px;
+      border-radius: 15px;
       background-color: ${(props) => props.theme.primary.white};
       transition: all 0.3s ease-in-out;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
