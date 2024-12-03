@@ -1,81 +1,71 @@
 import styled from "styled-components";
-import { colors } from "../../theme.js";
 
-export const LoginPage = styled.div`
+export default styled.div`
   height: 100vh;
-  width: 375px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: ${({ theme }) => theme.primary.white};
 
-export const DivHeader = styled.div`
-  background: radial-gradient(
-    circle,
-    ${colors.gradient.lighterBlue} 35%,
-    ${colors.gradient.darkerBlue} 100%
-  );
-  padding: 24px 0px;
-  text-align: center;
-  box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
+  header {
+    background: radial-gradient(
+      circle,
+      ${({ theme }) => theme.gradient.lighterBlue} 35%,
+      ${({ theme }) => theme.gradient.darkerBlue} 100%
+    );
+    padding: 24px 0px;
+    text-align: center;
+    box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
 
-  img {
-    filter: drop-shadow(0px 8px 4px rgb(21, 21, 21, 0.5));
-  }
-`;
+    @media (min-width: 768px) {
+      position: relative;
+      padding: 0px 0px;
+      height: 100px;
+    }
 
-export const DivMain = styled.div`
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 17px;
-  flex: 1;
-`;
-
-export const CadastroLink = styled.a`
-  text-decoration: none;
-  color: ${colors.primary.links};
-  transition: all 0.3s ease;
-
-  &:visited {
-    color: ${colors.primary.textColor};
-  }
-
-  &:hover {
-    font-weight: 500;
+    img {
+      filter: drop-shadow(0px 8px 4px rgb(21, 21, 21, 0.5));
+      
+      @media (min-width: 768px) {
+        top: 16px;
+        position: relative;
+        filter: drop-shadow(
+          0px 3px 0px ${({ theme }) => theme.gradient.lighterBlue}
+        );
+      }
+    }
   }
 
-  &:active {
-    font-weight: normal;
+  main {
+    padding: 56px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 17px;
+    flex: 1;
+    height: 100%;
+    /* @media (min-width: 768px) {
+      align-items: flex-start;
+      justify-content: center;
+    } */
   }
-`;
 
-export const DivFooter = styled.div`
-  text-align: center;
-  padding-bottom: 24px;
+  a {
+    text-decoration: none;
+    color: ${({ theme }) => theme.primary.links};
+    transition: all 0.3s ease;
 
-  p {
-    font-size: 12px;
+    &:visited {
+      color: ${({ theme }) => theme.primary.textColor};
+    }
+
+    &:hover {
+      font-weight: 500;
+    }
+
+    &:active {
+      font-weight: normal;
+    }
   }
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  row-gap: 17px;
-`;
-
-export const Button = styled.button`
-  background: radial-gradient(
-    circle,
-    ${colors.gradient.lighterBlue} 50%,
-    ${colors.gradient.darkerBlueButton} 100%
-  );
-  padding: 8px 24px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font: 500 20px "Raleway", sans-serif;
-  float: right;
-  cursor: pointer;
 `;
