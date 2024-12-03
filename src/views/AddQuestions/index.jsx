@@ -7,13 +7,20 @@ import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
-import { Paragraph } from "src/components/Paragraph/index"
-import { BibleRef } from "../../components/BibleRef";
+import { Paragraph } from "src/components/Paragraph/index";
+import {
+  fetchBooks,
+  fetchChapters,
+  fetchVerses,
+  fetchCompleteReference,
+} from "src/services/apiBiblia";
 
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
-
-  const [isReferenceComplete, setIsReferenceComplete] = useState("");
+  const [books, setBooks] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [verses, setVerses] = useState([]);
+  const [bookId, setBookId] = useState("");
 
   const {
     handleChange,
@@ -23,6 +30,7 @@ const AddQuestions = () => {
     touched,
     isSubmitting,
     handleSubmit,
+    setFieldValue,
   } = useFormik({
     initialValues: {
       tipoResposta: "", // MANAGED
@@ -42,11 +50,111 @@ const AddQuestions = () => {
     },
   });
 
-  // console.log(values);
+  console.log(values);
 
   useEffect(() => {
-    setIsReferenceComplete(values.tipoResposta == "RLC" ? "RLC" : "");
-  }, [values.tipoResposta]);
+    fetchBooks().then((data) => {
+      setBooks(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const { referencia } = values;
+    if (referencia) {
+      const regex = /^([A-Za-z0-9]+)\s+(\d+):(\d+)$/;
+      const match = referencia.match(regex);
+      if (match) {
+        const abrev = match[1];
+        const chapterNumber = match[2];
+        const verseNumber = match[3];
+        fetchCompleteReference(abrev, chapterNumber, verseNumber).then(
+          (response) => {
+            response.map((res) => {
+              console.log(res.texto);
+            });
+          }
+        );
+      } else {
+        return;
+      }
+    }
+  }, [values.referencia]);
+
+  useEffect(() => {
+    if (values.tipoResposta || values.referenciaBiblica !== undefined) {
+      setFieldValue("referencia", "");
+      setChapters([]);
+      setVerses([]);
+    }
+  }, [values.tipoResposta, values.referenciaBiblica]);
+
+  const handleBook = (event) => {
+    const currentBookId = event.target.value;
+
+    if (currentBookId) {
+      setChapters([]);
+      setVerses([]);
+      const selectedBook = books.find((book) => book.id == currentBookId).abrev;
+      const newReference = `${selectedBook}`;
+      setFieldValue("referencia", newReference);
+      setBookId(currentBookId);
+
+      fetchChapters(currentBookId).then((total) => {
+        total = Number(total);
+        const temp = [];
+        for (let i = 1; i <= total; i++) {
+          temp.push(i);
+        }
+        setChapters(temp);
+      });
+    } else {
+      setFieldValue("referencia", "");
+      setChapters([]);
+      setVerses([]);
+      return;
+    }
+  };
+
+  const handleChapter = (event) => {
+    const chapterNumber = event.target.value;
+
+    if (chapterNumber) {
+      setVerses([]);
+      const { referencia } = values;
+      const newReference = `${referencia.split(" ")[0]} ${chapterNumber}`;
+      setFieldValue("referencia", newReference);
+
+      fetchVerses(bookId, chapterNumber).then((total) => {
+        total = Number(total);
+        const temp = [];
+        for (let i = 1; i <= total; i++) {
+          temp.push(i);
+        }
+        setVerses(temp);
+      });
+    } else {
+      setVerses([]);
+      return;
+    }
+  };
+  const handleVerse = (event) => {
+    const verseNumber = event.target.value;
+
+    if (verseNumber) {
+      const { referencia } = values;
+      const referenceParts = referencia.split(" ");
+      const bookAbbreviation = referenceParts[0];
+      const chapterAndVerse = referenceParts[1]?.split(":");
+      const newReference = chapterAndVerse[1]
+        ? `${bookAbbreviation} ${chapterAndVerse[0]}:${verseNumber}`
+        : `${bookAbbreviation} ${
+            chapterAndVerse ? chapterAndVerse[0] : 1
+          }:${verseNumber}`;
+      setFieldValue("referencia", newReference, false);
+    } else {
+      return;
+    }
+  };
 
   return (
     <Container>
@@ -168,7 +276,56 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.referenciaBiblica === "true" ? (
-                <BibleRef isReferenceComplete={isReferenceComplete} />
+                <>
+                  <select name="books" id="books" onChange={handleBook}>
+                    <option value="">Selecione um livro...</option>
+                    {books.map((book) => {
+                      return (
+                        <option key={book.id} value={book.id}>
+                          {book.nome}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <select
+                    disabled={
+                      !values.referencia || !values.referencia.split(" ")[0]
+                    }
+                    name="chapters"
+                    id="chapters"
+                    onChange={handleChapter}
+                  >
+                    <option value="">Selecione um capítulo...</option>
+                    {chapters.map((chapter) => {
+                      return (
+                        <option key={chapter} value={chapter}>
+                          {chapter}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {values.tipoResposta === "RLC" ? (
+                    ""
+                  ) : (
+                    <select
+                      disabled={
+                        !values.referencia || !values.referencia.split(" ")[1]
+                      }
+                      name="verses"
+                      id="verses"
+                      onChange={handleVerse}
+                    >
+                      <option value="">Selecione um versículo...</option>
+                      {verses.map((verse) => {
+                        return (
+                          <option key={verse} value={verse}>
+                            {verse}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
+                </>
               ) : (
                 <div>
                   <textarea
