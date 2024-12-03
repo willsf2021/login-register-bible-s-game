@@ -6,9 +6,9 @@ import { Input } from "src/components/Input/index";
 import { useFormik } from "formik";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
-import { FormContainer } from "../../components/FormContainer";
-import { Button } from "../../components/Button";
-import { Footer } from "../../components/Footer";
+import { StyledForm } from "src/components/StyledForm";
+import { Button } from "src/components/Button";
+import { Footer } from "src/components/Footer";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +69,7 @@ export default function RegisterForm() {
         <img src={Logo} alt="Logo" />
       </header>
       <main>
-        <FormContainer onSubmit={formik.handleSubmit}>
+        <StyledForm onSubmit={formik.handleSubmit}>
           <div className="titleParagraph">
             <Title title="Cadastre-se" />
             <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
@@ -139,11 +139,9 @@ export default function RegisterForm() {
               {loading ? "Carregando..." : "Cadastrar"}
             </Button>
           </div>
-        </FormContainer>
+        </StyledForm>
       </main>
-      <Footer>
-        <p>Jogo da Bíblia &copy; 2022</p>
-      </Footer>
+      <Footer />
       <ToastContainer />{" "}
     </Container>
   );

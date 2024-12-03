@@ -3,12 +3,12 @@ import { useFormik } from "formik";
 import { isReference, useQuery } from "@apollo/client";
 import { GET_TEMAS } from "src/services/api";
 import Container, { ContainerLabelInput } from "./styles";
-import { FormContainer } from "src/components/FormContainer";
+import { StyledForm } from "src/components/StyledForm";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
-import { Footer } from "../../components/Footer";
+import { Footer } from "src/components/Footer";
 import { BibleRef } from "src/components/BibleRef";
 
 const AddQuestions = () => {
@@ -60,7 +60,7 @@ const AddQuestions = () => {
           <p>Erro ao carregar temas: {error.message}</p>
         ) : (
           <>
-            <FormContainer onSubmit={handleSubmit}>
+            <StyledForm onSubmit={handleSubmit}>
               <div className="titleParagraph">
                 <Title title="Adicionar Pergunta" />
                 <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
@@ -170,7 +170,10 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.referenciaBiblica === "true" ? (
-                <BibleRef isReferenceComplete={isReferenceComplete} setFieldValue={setFieldValue}/>
+                <BibleRef
+                  isReferenceComplete={isReferenceComplete}
+                  setFieldValue={setFieldValue}
+                />
               ) : (
                 <div>
                   <textarea
@@ -186,13 +189,11 @@ const AddQuestions = () => {
               <div className="containerButton">
                 <Button type="submit">Enviar</Button>
               </div>
-            </FormContainer>
+            </StyledForm>
           </>
         )}
       </main>
-      <Footer>
-        <p>Jogo da Bíblia &copy; 2022</p>
-      </Footer>
+      <Footer />
     </Container>
   );
 };

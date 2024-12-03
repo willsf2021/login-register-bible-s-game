@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-
 export default styled.div`
   max-width: 700px;
-  background-color: ${(props) => props.theme.primary.white};
+  background-color: ${({ theme }) => theme.primary.white};
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
   main {
     display: flex;
     height: 100vh;
@@ -21,11 +21,13 @@ export default styled.div`
       flex-direction: column;
       row-gap: 16px;
     }
+
     div.containerTipoReferencia {
       display: flex;
       flex-direction: column;
       row-gap: 16px;
     }
+
     div.titleParagraph {
       display: flex;
       flex-direction: column;
@@ -44,15 +46,13 @@ export default styled.div`
   }
 `;
 
-
-
-
 export const ContainerLabelInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   column-gap: 16px;
-  color: ${(props) => props.theme.primary.textColor};
+  color: ${({ theme }) => theme.primary.textColor};
+
   input {
     appearance: none;
     display: none;
@@ -64,13 +64,13 @@ export const ContainerLabelInput = styled.div`
     display: inline-block;
     position: relative;
     border-radius: 50%;
-    border: 1px solid ${(props) => props.theme.primary.borderColor};
+    border: 1px solid ${({ theme }) => theme.primary.borderColor};
     cursor: pointer;
   }
 
   input:checked + label.customRadio {
-    background-color: ${(props) => props.theme.gradient.lighterBlue};
-    border-color: ${(props) => props.theme.gradient.darkerBlue};
+    background-color: ${({ theme }) => theme.gradient.lighterBlue};
+    border-color: ${({ theme }) => theme.gradient.darkerBlue};
   }
 
   label.customRadio::after {
@@ -81,13 +81,13 @@ export const ContainerLabelInput = styled.div`
     transform: translate(-50%, -50%);
     height: 18px;
     width: 18px;
-    background-color: ${(props) => props.theme.primary.white};
+    background-color: ${({ theme }) => theme.primary.white};
     border-radius: 50%;
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
   input:checked + label.customRadio::after {
-    background-color: ${(props) => props.theme.gradient.lighterBlue};
+    background-color: ${({ theme }) => theme.gradient.lighterBlue};
     transform: translate(-50%, -50%) scale(0.6);
   }
 `;

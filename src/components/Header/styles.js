@@ -8,24 +8,26 @@ export default styled.div`
   min-width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  background-color: ${(props) => props.theme.primary.white};
+  background-color: ${({theme}) => theme.primary.white};
 
   header {
     background: radial-gradient(
       circle,
-      ${(props) => props.theme.gradient.lighterBlue} 35%,
-      ${(props) => props.theme.gradient.darkerBlue} 100%
+      ${({theme}) => theme.gradient.lighterBlue} 35%,
+      ${({theme}) => theme.gradient.darkerBlue} 100%
     );
     height: 56px;
     padding: 24px 0px;
     text-align: center;
     box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
     position: relative;
+
     @media (min-width: 768px) {
       position: relative;
       padding: 0px 0px;
       height: 100px;
     }
+
     .menuHamburger {
       top: 50%;
       transform: translateY(-50%);
@@ -36,12 +38,13 @@ export default styled.div`
       cursor: pointer;
     }
   }
+
   img {
     @media (min-width: 768px) {
       top: 16px;
       position: relative;
       filter: drop-shadow(
-        0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+        0px 3px 0px ${({theme}) => theme.gradient.lighterBlue}
       );
       width: auto;
     }
@@ -50,7 +53,7 @@ export default styled.div`
     position: relative;
     bottom: 22px;
     filter: drop-shadow(
-      0px 3px 0px ${(props) => props.theme.gradient.lighterBlue}
+      0px 3px 0px ${({theme}) => theme.gradient.lighterBlue}
     );
   }
 `;

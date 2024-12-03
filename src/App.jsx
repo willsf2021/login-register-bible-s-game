@@ -10,7 +10,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { colors } from "src/services/theme.js";
 import GlobalStyle from "./styles";
 import Routes from "src/services/Routes";
-import SnackbarProvider from "react-simple-snackbar";
 
 const httpLink = createHttpLink({
   uri: "https://jogodabiblia.com/graphql",
@@ -34,16 +33,14 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <SnackbarProvider>
-        <ThemeProvider theme={colors}>
-          <GlobalStyle />
-          <Router
-            future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
-          >
-            <Routes />
-          </Router>
-        </ThemeProvider>
-      </SnackbarProvider>
+      <ThemeProvider theme={colors}>
+        <GlobalStyle />
+        <Router
+          future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+        >
+          <Routes />
+        </Router>
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

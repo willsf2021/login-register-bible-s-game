@@ -10,6 +10,9 @@ import { Paragraph } from "src/components/Paragraph/index";
 
 export const BibleRef = ({ isReferenceComplete, setFieldValue }) => {
   const [books, setBooks] = useState([]);
+
+
+  
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
 

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import Logo from "src/assets/logo-vetor.png";
 import validationSchema from "./validationSchema";
 import Container from "./styles";
-import { FormContainer } from "../../components/FormContainer";
-import { Button } from "../../components/Button";
+import { StyledForm } from "src/components/StyledForm";
+import { Button } from "src/components/Button";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "src/services/api";
 import { useFormik } from "formik";
 import { Input } from "src/components/Input";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
-import { Footer } from "../../components/Footer";
+import { Footer } from "src/components/Footer";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
@@ -29,9 +29,6 @@ export default function Login() {
           username: values.username,
           password: values.password,
         },
-      }).catch((error) => {
-        console.error("Erro na mutation:", error);
-        setLoginError(error.message);
       });
     },
   });
@@ -43,12 +40,15 @@ export default function Login() {
       localStorage.setItem("authToken", token);
       setLoginError(null);
     }
+  }, [data]);
+
+  useEffect(() => {
     if (error) {
       console.error("Login falhou:", error);
       setLoginError(error.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
+  }, [error]);
 
   return (
     <Container>
@@ -56,7 +56,7 @@ export default function Login() {
         <img src={Logo} alt="Logo do Jogo" />
       </header>
       <main>
-        <FormContainer
+        <StyledForm
           onSubmit={(event) => {
             event.preventDefault();
             formik.handleSubmit(event);
@@ -85,13 +85,11 @@ export default function Login() {
             </Button>
           </div>
           <a href="/cadastro">Cadastre-se</a>
-        </FormContainer>
+        </StyledForm>
 
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
       </main>
-      <Footer>
-        <p>Jogo da Bíblia &copy; 2022</p>
-      </Footer>
+      <Footer />
     </Container>
   );
 }
