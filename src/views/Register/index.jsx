@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import validationSchema from "./validationSchema";
 import Logo from "src/assets/logo-vetor.png";
 import Container from "./styles";
@@ -24,7 +24,12 @@ export default function RegisterForm() {
     if (data?.cadastrarUsuario?.usuario) {
       toast.success("Cadastro realizado com sucesso!");
       setTimeout(() => navigate("/login"), 2000);
-    } else if (error) {
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
       if (error.graphQLErrors?.length > 0) {
         error.graphQLErrors.forEach(({ message }) => {
           toast.error(message);
@@ -33,7 +38,8 @@ export default function RegisterForm() {
         toast.error("Erro ao realizar o cadastro. Tente novamente.");
       }
     }
-  }, [data, error, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   const formik = useFormik({
     initialValues: {
