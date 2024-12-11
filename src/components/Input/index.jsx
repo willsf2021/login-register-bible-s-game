@@ -1,12 +1,8 @@
 import React from "react";
 import Container from "./styles";
 import PropTypes from "prop-types";
-export default function StyledInput({
-  formik,
-  name,
-  type = "text",
-  placeholder,
-}) {
+
+export const Input = ({ formik, name, type = "text", placeholder }) => {
   const hasError = formik.touched[name] && formik.errors[name];
   return (
     <Container hasError={hasError}>
@@ -26,9 +22,9 @@ export default function StyledInput({
       ) : null}
     </Container>
   );
-}
+};
 
-StyledInput.propTypes = {
+Input.propTypes = {
   formik: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
