@@ -5,16 +5,20 @@ import Container from "./styles";
 import { StyledForm } from "src/components/StyledForm";
 import { Button } from "src/components/Button";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "src/services/api";
 import { useFormik } from "formik";
 import { Input } from "src/components/Input";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
 import { Footer } from "src/components/Footer";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -39,6 +43,10 @@ export default function Login() {
       console.log("Login realizado com sucesso:", data);
       localStorage.setItem("authToken", token);
       setLoginError(null);
+      toast.success("Login realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/pagina-segura");
+      }, 2000);
     }
   }, [data]);
 
@@ -90,6 +98,7 @@ export default function Login() {
         {loginError && <p style={{ color: "red" }}>{loginError}</p>}
       </main>
       <Footer />
+      <ToastContainer />
     </Container>
   );
 }

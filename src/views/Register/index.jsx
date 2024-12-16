@@ -9,7 +9,7 @@ import { Paragraph } from "src/components/Paragraph/index";
 import { StyledForm } from "src/components/StyledForm";
 import { Button } from "src/components/Button";
 import { Footer } from "src/components/Footer";
-import { REGISTER_USER } from "src/services/api";
+import { REGISTER_USER, LOGIN_MUTATION } from "src/services/api";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,14 +19,35 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const [cadastrarUsuario, { data, loading, error }] =
     useMutation(REGISTER_USER);
+  const [login, { data: loginData, error: loginError }] =
+    useMutation(LOGIN_MUTATION);
 
   useEffect(() => {
     if (data?.cadastrarUsuario?.usuario) {
       toast.success("Cadastro realizado com sucesso!");
-      setTimeout(() => navigate("/login"), 2000);
+      const { username, password } = formik.values;
+      setTimeout(
+        () =>
+          login({
+            variables: { username, password },
+          }),
+        2000
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    if (loginData?.login?.token) {
+      localStorage.setItem("authToken", loginData.login.token);
+      localStorage.setItem("username", formik.values.name);
+      toast.success("Login realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/pagina-segura");
+      }, 2000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginData]);
 
   useEffect(() => {
     if (error) {
@@ -148,7 +169,7 @@ export default function RegisterForm() {
         </StyledForm>
       </main>
       <Footer />
-      <ToastContainer />{" "}
+      <ToastContainer />
     </Container>
   );
 }
