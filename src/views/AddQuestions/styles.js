@@ -1,21 +1,7 @@
 import styled from "styled-components";
 
 export default styled.div`
-  max-width: 700px;
-  background-color: ${({ theme }) => theme.primary.white};
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-
-  main {
-    display: flex;
-    height: 100vh;
-    flex-direction: column;
-    padding: 56px 24px 24px;
-    height: 100vh;
-    flex: 1;
-    row-gap: 17px;
-
+ 
     div.containerTipoResposta {
       display: flex;
       flex-direction: column;
@@ -43,7 +29,7 @@ export default styled.div`
       width: 100%;
       font-family: "Raleway", sans-serif;
     }
-  }
+  
 `;
 
 export const ContainerLabelInput = styled.div`

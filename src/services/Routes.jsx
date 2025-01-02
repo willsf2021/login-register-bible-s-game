@@ -3,7 +3,7 @@ import Home from "src/views/Home";
 import Login from "src/views/Login";
 import Register from "src/views/Register";
 import AddQuestions from "src/views/AddQuestions";
-import SecurePage from "../views/SecurePage";
+import SecuredPage from "../views/SecuredPage";
 
 export default () => (
   <Routes>
@@ -11,6 +11,6 @@ export default () => (
     <Route path="/login" element={<Login />} />
     <Route path="/cadastro" element={<Register />} />
     <Route path="/adicionar-perguntas" element={<AddQuestions />} />
-    <Route path="/pagina-segura" element={<SecurePage />} />
+    <Route path="/pagina-segura" element={<SecuredPage />} />
   </Routes>
 );

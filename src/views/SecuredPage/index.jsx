@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { PageWraper } from "src/components/PageWraper";
+import { MainWraper } from "src/components/MainWraper";
 
-function SecurePage() {
+function SecuredPage() {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
@@ -13,7 +15,13 @@ function SecurePage() {
     const storedUsername = localStorage.getItem("username");
     setUsername(storedUsername);
   }, [navigate]);
-  return <h1>Olá, {username}</h1>;
+  return (
+    <PageWraper>
+      <MainWraper>
+        <h1>Olá, {username}</h1>
+      </MainWraper>
+    </PageWraper>
+  );
 }
 
-export default SecurePage;
+export default SecuredPage;

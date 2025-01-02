@@ -1,63 +1,11 @@
 import styled from "styled-components";
 
 export default styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  max-width: 700px;
-  margin: 0 auto;
-  background-color: ${({ theme }) => theme.primary.white};
-
-  header {
-    background: radial-gradient(
-      circle,
-      ${({ theme }) => theme.gradient.lighterBlue} 35%,
-      ${({ theme }) => theme.gradient.darkerBlue} 100%
-    );
-    height: 56px;
-    padding: 24px 0px;
-    text-align: center;
-    box-shadow: 0px 4px 16px 0px rgba(21, 21, 21, 0.3);
-
-    @media (min-width: 768px) {
-      position: relative;
-      padding: 0px 0px;
-      height: 100px;
-    }
-  }
-
-  img {
-    @media (min-width: 768px) {
-      top: 16px;
-      position: relative;
-      filter: drop-shadow(
-        0px 3px 0px ${({ theme }) => theme.gradient.lighterBlue}
-      );
-
-      width: auto;
-    }
-
-    width: 96px;
-    position: relative;
-    bottom: 22px;
-    filter: drop-shadow(
-      0px 3px 0px ${({ theme }) => theme.gradient.lighterBlue}
-    );
-  }
-
-  main {
+ 
+  .containerButton {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 56px 24px 24px;
-    max-height: 100%;
-    flex: 1;
-
-    .containerButton {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
+    align-items: center;
+    justify-content: flex-end;
   }
 
   div.checkbox {

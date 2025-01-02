@@ -13,6 +13,8 @@ import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
 import { Footer } from "src/components/Footer";
 import { toast, ToastContainer } from "react-toastify";
+import { PageWraper } from "src/components/PageWraper";
+import { MainWraper } from "src/components/MainWraper";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
@@ -59,46 +61,45 @@ export default function Login() {
   }, [error]);
 
   return (
-    <Container>
-      <header>
-        <img src={Logo} alt="Logo do Jogo" />
-      </header>
-      <main>
-        <StyledForm
-          onSubmit={(event) => {
-            event.preventDefault();
-            formik.handleSubmit(event);
-          }}
-        >
-          <Title title="Login" />
-          <Paragraph
-            content={
-              "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
-            }
-          />
-          <Input
-            name="username"
-            placeholder="username ou email"
-            formik={formik}
-          />
-          <Input
-            name="password"
-            type="password"
-            placeholder="senha"
-            formik={formik}
-          />
-          <div className="containerButton">
-            <Button type="submit">
-              {loading ? "Carregando..." : "Entrar"}
-            </Button>
-          </div>
-          <a href="/cadastro">Cadastre-se</a>
-        </StyledForm>
+    <PageWraper>
+      <Container>
+        <MainWraper>
+          <StyledForm
+            onSubmit={(event) => {
+              event.preventDefault();
+              formik.handleSubmit(event);
+            }}
+          >
+            <Title title="Login" />
+            <Paragraph
+              content={
+                "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
+              }
+            />
+            <Input
+              name="username"
+              placeholder="username ou email"
+              formik={formik}
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="senha"
+              formik={formik}
+            />
+            <div className="containerButton">
+              <Button type="submit">
+                {loading ? "Carregando..." : "Entrar"}
+              </Button>
+            </div>
+            <a href="/cadastro">Cadastre-se</a>
+          </StyledForm>
 
-        {loginError && <p style={{ color: "red" }}>{loginError}</p>}
-      </main>
-      <Footer />
-      <ToastContainer />
-    </Container>
+          {loginError && <p style={{ color: "red" }}>{loginError}</p>}
+        </MainWraper>
+
+        <ToastContainer />
+      </Container>
+    </PageWraper>
   );
 }
