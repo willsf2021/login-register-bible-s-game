@@ -16,6 +16,6 @@ h2,p {
   padding: 80px;
   background-color: ${({ theme }) => theme.primary.white};
   ul li {
-    list-style: none;
+    list-style-position: inside;
   }
 `;
