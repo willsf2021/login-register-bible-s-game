@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export default styled.div`
- 
   .containerButton {
     display: flex;
     align-items: center;
@@ -28,7 +27,7 @@ export default styled.div`
     label {
       position: absolute;
       left: 40px;
-      top: 20px;
+      top: 12px;
     }
   }
 

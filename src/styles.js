@@ -12,7 +12,10 @@ export default createGlobalStyle`
     height: 100vh;
     background-color: ${colors.primary.backgroundDesktop};
   }
-
+  a, a:visited {
+    color: ${colors.gradient.lighterBlue};
+    font-weight:600;
+  }
   textarea {
     resize: none;
   }

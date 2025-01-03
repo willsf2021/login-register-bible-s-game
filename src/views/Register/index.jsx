@@ -158,7 +158,15 @@ export default function RegisterForm() {
                 errortype="checkbox"
               />
               <label htmlFor="terms">
-                Li e concordo com os <a href="#">Termos de Uso</a>
+                Li e concordo com os{" "}
+                <a href="/termos-e-politicas?tab=termos-de-uso">
+                  Termos de Uso{" "}
+                </a>
+                e
+                <a href="/termos-e-politicas?tab=politica-de-privacidade">
+                  {" "}
+                  Políticas de Privacidade
+                </a>
               </label>
             </div>
             {formik.errors.general && (
