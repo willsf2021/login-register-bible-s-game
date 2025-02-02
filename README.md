@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# Jogo da Bíblia
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Status: Em desenvolvimento**
 
-## Available Scripts
+O **Jogo da Bíblia** é um projeto em desenvolvimento que visa criar uma ferramenta divertida e educativa, ajudando no aprendizado da Palavra através de um jogo interativo.
 
-In the project directory, you can run:
+## Funcionalidades Atuais
 
-### `npm start`
+- **Cadastro e Login** (em fase de desenvolvimento)
+- **Funcionalidade de adicionar perguntas** (em fase de desenvolvimento)
+- **Em breve**: outras melhorias.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## O que está por vir
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+O projeto está em constante evolução e, em breve, contará com:
 
-### `npm test`
+- Sistema completo de perguntas interativas
+- Tabuleiros personalizados
+- Versão mobile
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Como contribuir
 
-### `npm run build`
+O projeto é uma iniciativa contínua e, para avançar, contamos com o apoio de voluntários e doações. Se você quer colaborar de alguma forma, entre em contato! As áreas em que precisamos de ajuda incluem:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Criação de perguntas
+- Desenvolvimento de sistemas
+- Design e ilustrações
+- Mídias sociais
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Colabore
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Se você deseja apoiar o projeto financeiramente, as doações são bem-vindas e ajudam a cobrir os custos com a manutenção do sistema e a criação de novos recursos.
 
-### `npm run eject`
+## Agradecimentos
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Desde 2019, temos avançado devagar e sempre, mas com muito esforço e dedicação. Agradecemos suas orações e apoio!

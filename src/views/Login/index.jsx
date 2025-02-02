@@ -1,103 +1,105 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo-vetor.png";
-import {
-  LoginPage,
-  DivHeader,
-  DivMain,
-  DivFooter,
-  CadastroLink,
-  Button,
-  Form,
-} from "./styles";
+import Logo from "src/assets/logo-vetor.png";
 import validationSchema from "./validationSchema";
+import Container from "./styles";
+import { StyledForm } from "src/components/StyledForm";
+import { Button } from "src/components/Button";
 import { useMutation } from "@apollo/client";
-import { LOGIN_MUTATION } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import { LOGIN_MUTATION } from "src/services/api";
 import { useFormik } from "formik";
-import Input from "../../components/Input";
-import Title from "../../components/Title";
-import Paragraph from "../../components/Paragraph/index";
+import { Input } from "src/components/Input";
+import { Title } from "src/components/Title";
+import { Paragraph } from "src/components/Paragraph/index";
+import { Footer } from "src/components/Footer";
+import { toast, ToastContainer } from "react-toastify";
+import { PageWraper } from "src/components/PageWraper";
+import { MainWraper } from "src/components/MainWraper";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
-  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION),
-    formik = useFormik({
-      initialValues: {
-        username: "",
-        password: "",
-      },
-      validationSchema,
-      onSubmit: (values) => {
-        console.log("Solicitando login...", values);
-        login({
-          variables: {
-            username: values.username,
-            password: values.password,
-          },
-        }).catch((error) => {
-          console.error("Erro na mutation:", error);
-          if (error.message === "Please enter valid credentials") {
-            setLoginError("Usuário ou senha estão incorretos.");
-          } else {
-            setLoginError("Ocorreu um erro ao tentar fazer login.");
-          }
-        });
-      },
-    });
+  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("Solicitando login...", values);
+      login({
+        variables: {
+          username: values.username,
+          password: values.password,
+        },
+      });
+    },
+  });
 
   useEffect(() => {
     if (data) {
+      const token = data.login.token;
       console.log("Login realizado com sucesso:", data);
+      localStorage.setItem("authToken", token);
       setLoginError(null);
+      toast.success("Login realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/pagina-segura");
+      }, 2000);
     }
+  }, [data]);
+
+  useEffect(() => {
     if (error) {
       console.error("Login falhou:", error);
-      if (error.message === "Please enter valid credentials") {
-        setLoginError("Usuário ou senha estão incorretos.");
-      } else {
-        setLoginError("Ocorreu um erro ao tentar fazer login.");
-      }
+      setLoginError(error.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
+  }, [error]);
 
   return (
-    <LoginPage>
-      <DivHeader>
-        <img src={Logo} alt="Logo do Jogo" />
-      </DivHeader>
-      <DivMain>
-        <Title title="Login" />
-        <Paragraph
-          content={
-            "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
-          }
-        />
-        <Form onSubmit={formik.handleSubmit}>
-          <Input
-            name="username"
-            placeholder="username ou email"
-            formik={formik}
-          />
-          <Input
-            name="password"
-            type="password"
-            placeholder="senha"
-            formik={formik}
-          />
-          <div>
-            <Button type="submit">
-              {loading ? "Carregando..." : "Entrar"}
-            </Button>
-          </div>
-        </Form>
+    <PageWraper>
+      <Container>
+        <MainWraper>
+          <StyledForm
+            onSubmit={(event) => {
+              event.preventDefault();
+              formik.handleSubmit(event);
+            }}
+          >
+            <Title title="Login" />
+            <Paragraph
+              content={
+                "Colabore conosco. Digite abaixo seu usuário e senha para começar a cadastrar suas perguntas."
+              }
+            />
+            <Input
+              name="username"
+              placeholder="username ou email"
+              formik={formik}
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="senha"
+              formik={formik}
+            />
+            <div className="containerButton">
+              <Button type="submit">
+                {loading ? "Carregando..." : "Entrar"}
+              </Button>
+            </div>
+            <a href="/cadastro">Cadastre-se</a>
+          </StyledForm>
 
-        {loginError && <p style={{ color: "red" }}>{loginError}</p>}
+          {loginError && <p style={{ color: "red" }}>{loginError}</p>}
+        </MainWraper>
 
-        <CadastroLink href="/register">Cadastre-se</CadastroLink>
-      </DivMain>
-      <DivFooter>
-        <p>Jogo da Bíblia &copy; 2022</p>
-      </DivFooter>
-    </LoginPage>
+        <ToastContainer />
+      </Container>
+    </PageWraper>
   );
 }

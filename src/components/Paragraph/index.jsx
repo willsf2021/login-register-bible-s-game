@@ -1,5 +1,5 @@
 import { StyledParagraph } from "./styles";
 
-export default function Paragraph({ content }) {
+export const Paragraph = ({ content }) => {
   return <StyledParagraph>{content}</StyledParagraph>;
 }

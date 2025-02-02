@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "../../theme";
 
 export default styled.div.withConfig({
   shouldForwardProp: (prop) => !["hasError"].includes(prop),
@@ -10,46 +9,59 @@ export default styled.div.withConfig({
 
   input {
     height: 55px;
-    border: 1px solid ${colors.primary.borderColor};
+    border: 1px solid ${({ theme }) => theme.primary.borderColor};
     border-radius: 5px;
     font: 500 16px "Lato", sans-serif;
     padding-left: 16px;
-    color: ${colors.primary.lighterBlue};
+    color: ${({ theme }) => theme.gradient.lighterBlue};
+    
+    @media (min-width: 768px) {
+      max-width: 400px;
+    }
 
-    ${(props) =>
-      props.hasError &&
+    ${({ hasError }) =>
+      hasError &&
       `
-      border: 2px solid ${colors.primary.redError};
+      border: 2px solid ${({ theme }) => theme.primary.redError};
     `}
 
     &:focus {
       outline: none;
       border: 1px solid transparent;
-      ${(props) =>
-        props.hasError &&
+      ${({ hasError }) =>
+        hasError &&
         `
-      border: 2px solid  ${colors.primary.redError};
+      border: 2px solid  ${({ theme }) => theme.primary.redError};
     `}
       border-radius: 5px;
-      background: linear-gradient(white, white) padding-box,
-        linear-gradient(to right, #547b96, #547b96), border-box;
+      background: linear-gradient(
+            ${({ theme }) => theme.primary.white},
+            ${({ theme }) => theme.primary.white}
+          )
+          padding-box,
+        linear-gradient(
+          to right,
+          ${({ theme }) => theme.gradient.lighterBlue},
+          ${({ theme }) => theme.gradient.lighterBlue}
+        ),
+        border-box;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) inset;
     }
   }
 
   &:valid {
-    border: 2px solid #547b96;
-    ${(props) =>
-      props.hasError &&
+    border: 2px solid ${({ theme }) => theme.gradient.lighterBlue};
+    ${({ hasError }) =>
+      hasError &&
       `
-      border: 2px solid  #ff6b6b;
+      border: 2px solid  ${({ theme }) => theme.primary.redError}
     `}
     background-color: hsla(205, 28%, 46%, 0.05);
   }
 
   .error {
     font: 600 10px "Raleway", sans-serif;
-    color: #ff6b6b;
+    color: ${({ theme }) => theme.primary.redError};
     padding-left: 0px;
   }
 `;

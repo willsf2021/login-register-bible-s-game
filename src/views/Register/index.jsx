@@ -1,38 +1,68 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
+import { useEffect } from "react";
 import validationSchema from "./validationSchema";
-import StyledInput from "../../components/Input/index";
-import Logo from "../../assets/logo-vetor.png";
-import {
-  RegisterContainer,
-  DivHeader,
-  StyledLogo,
-  DivMain,
-  CheckboxContainer,
-  ContainerTitlePara,
-  CheckboxContainerWpp,
-  StyledIsWhatsappLabel,
-} from "./styles";
-import { Form, Button } from "../Login/styles";
-import Title from "../../components/Title";
-import Paragraph from "../../components/Paragraph/index";
-import { gql } from "@apollo/client";
+import Logo from "src/assets/logo-vetor.png";
+import Container from "./styles";
+import { Input } from "src/components/Input/index";
+import { useFormik } from "formik";
+import { Title } from "src/components/Title";
+import { Paragraph } from "src/components/Paragraph/index";
+import { StyledForm } from "src/components/StyledForm";
+import { Button } from "src/components/Button";
+import { Footer } from "src/components/Footer";
+import { REGISTER_USER, LOGIN_MUTATION } from "src/services/api";
 import { useMutation } from "@apollo/client";
-
-const REGISTER_USER = gql`
-  mutation cadastrarUsuario($novoUsuario: UsuarioInput!) {
-    cadastrarUsuario(novoUsuario: $novoUsuario) {
-      usuario {
-        email
-        id
-      }
-    }
-  }
-`;
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { PageWraper } from "src/components/PageWraper";
+import { MainWraper } from "src/components/MainWraper";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterForm() {
-  const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
-  const [errorMessage, setErrorMessage] = useState(null); // Estado para mensagem de erro
+  const navigate = useNavigate();
+  const [cadastrarUsuario, { data, loading, error }] =
+    useMutation(REGISTER_USER);
+  const [login, { data: loginData, error: loginError }] =
+    useMutation(LOGIN_MUTATION);
+
+  useEffect(() => {
+    if (data?.cadastrarUsuario?.usuario) {
+      toast.success("Cadastro realizado com sucesso!");
+      const { username, password } = formik.values;
+      setTimeout(
+        () =>
+          login({
+            variables: { username, password },
+          }),
+        2000
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (loginData?.login?.token) {
+      localStorage.setItem("authToken", loginData.login.token);
+      localStorage.setItem("username", formik.values.name);
+      toast.success("Login realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/pagina-segura");
+      }, 2000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginData]);
+
+  useEffect(() => {
+    if (error) {
+      if (error.graphQLErrors?.length > 0) {
+        error.graphQLErrors.forEach(({ message }) => {
+          toast.error(message);
+        });
+      } else {
+        toast.error("Erro ao realizar o cadastro. Tente novamente.");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   const formik = useFormik({
     initialValues: {
@@ -47,127 +77,110 @@ export default function RegisterForm() {
     },
     validationSchema,
     onSubmit: async (values) => {
-      const requestData = {
-        name: values.name,
-        phone: values.phone,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        isWhatsapp: values.isWhatsapp,
-      };
-
-      try {
-        await cadastrarUsuario({
-          variables: { novoUsuario: requestData },
-        });
-        setErrorMessage(null);
-      } catch (err) {
-        if (err.graphQLErrors) {
-          err.graphQLErrors.forEach(({ message }) => {
-            if (message.includes("email")) {
-              setErrorMessage(
-                "Esse email já está em uso. Por favor, use outro."
-              );
-            } else if (message.includes("username")) {
-              setErrorMessage(
-                "Esse nome de usuário já está em uso. Por favor, escolha outro."
-              );
-            } else {
-              setErrorMessage("Erro ao cadastrar. Tente novamente.");
-            }
-          });
-        } else {
-          setErrorMessage("Erro ao cadastrar. Tente novamente.");
-        }
-      }
+      await cadastrarUsuario({
+        variables: {
+          novoUsuario: {
+            name: values.name,
+            phone: values.phone,
+            isWhatsapp: values.isWhatsapp,
+            email: values.email,
+            username: values.username,
+            password: values.password,
+          },
+        },
+      });
     },
   });
 
-  const handleWhatsappChange = () => {
-    formik.setFieldValue("isWhatsapp", !formik.values.isWhatsapp);
-  };
-
   return (
-    <RegisterContainer>
-      <DivHeader>
-        <StyledLogo src={Logo} />
-      </DivHeader>
-      <DivMain>
-        <ContainerTitlePara>
-          <Title title="Cadastre-se" />
-          <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
-        </ContainerTitlePara>
-        <Form onSubmit={formik.handleSubmit}>
-          <StyledInput
-            name="username"
-            type="text"
-            placeholder="username"
-            formik={formik}
-          />
-          <StyledInput
-            name="name"
-            type="text"
-            placeholder="nome"
-            formik={formik}
-          />
-          <StyledInput
-            name="email"
-            type="email"
-            placeholder="email"
-            formik={formik}
-          />
-          <StyledInput
-            name="password"
-            type="password"
-            placeholder="digite uma senha"
-            formik={formik}
-          />
-          <StyledInput
-            name="confirmPassword"
-            type="password"
-            placeholder="confirme a sua senha"
-            formik={formik}
-          />
-          <StyledInput
-            name="phone"
-            type="text"
-            placeholder="telefone (ex: +55 11 99999-9999)"
-            formik={formik}
-          />
-          <StyledIsWhatsappLabel>
-            O número acima é WhatsApp?
-          </StyledIsWhatsappLabel>
-          <CheckboxContainerWpp>
-            <span className="text yes">Não</span>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={formik.values.isWhatsapp}
-                onChange={handleWhatsappChange}
-              />
-              <span className="slider"></span>
-            </label>
-            <span className="text no">Sim</span>
-          </CheckboxContainerWpp>
-          <CheckboxContainer>
-            <StyledInput
-              name="terms"
-              type="checkbox"
+    <PageWraper>
+      <Container>
+        <MainWraper>
+          <StyledForm onSubmit={formik.handleSubmit}>
+            <div className="titleParagraph">
+              <Title title="Cadastre-se" />
+              <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas" />
+            </div>
+            <Input
+              name="username"
+              type="text"
+              placeholder="username"
               formik={formik}
-              errortype="checkbox"
             />
-            <label htmlFor="terms">
-              Li e concordo com os <a href="#">Termos de Uso</a>
-            </label>
-          </CheckboxContainer>
-          <span>
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <Button type="submit" disabled={loading}>
-              Cadastrar
-            </Button>
-          </span>
-        </Form>
-      </DivMain>
-    </RegisterContainer>
+            <Input name="name" type="text" placeholder="nome" formik={formik} />
+            <Input
+              name="email"
+              type="email"
+              placeholder="email"
+              formik={formik}
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="digite uma senha"
+              formik={formik}
+            />
+            <Input
+              name="confirmPassword"
+              type="password"
+              placeholder="confirme a sua senha"
+              formik={formik}
+            />
+            <Input
+              name="phone"
+              type="text"
+              placeholder="11 98887-8886"
+              formik={formik}
+            />
+            <div className="labelWpp">O número acima é WhatsApp?</div>
+            <div className="containerWpp">
+              <span className="text yes">Não</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={formik.values.isWhatsapp}
+                  onChange={() => {
+                    formik.setFieldValue(
+                      "isWhatsapp",
+                      !formik.values.isWhatsapp
+                    );
+                  }}
+                />
+                <span className="slider"></span>
+              </label>
+              <span className="text no">Sim</span>
+            </div>
+            <div className="checkbox">
+              <Input
+                name="terms"
+                type="checkbox"
+                formik={formik}
+                errortype="checkbox"
+              />
+              <label htmlFor="terms">
+                Li e concordo com os{" "}
+                <a href="/termos-e-politicas?tab=termos-de-uso">
+                  Termos de Uso{" "}
+                </a>
+                e
+                <a href="/termos-e-politicas?tab=politica-de-privacidade">
+                  {" "}
+                  Políticas de Privacidade
+                </a>
+              </label>
+            </div>
+            {formik.errors.general && (
+              <p style={{ color: "red" }}>{formik.errors.general}</p>
+            )}
+            <div className="containerButton">
+              <Button type="submit" disabled={loading}>
+                {loading ? "Carregando..." : "Cadastrar"}
+              </Button>
+            </div>
+          </StyledForm>
+        </MainWraper>
+        <ToastContainer />
+      </Container>
+    </PageWraper>
   );
 }
