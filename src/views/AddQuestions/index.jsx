@@ -2,20 +2,21 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { isReference, useQuery } from "@apollo/client";
 import { GET_TEMAS } from "src/services/api";
-import Container, { ContainerLabelInput, SelectMenu } from "./styles";
+import Container, { ContainerLabelInput } from "./styles";
 import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
-import { FaChevronDown } from "react-icons/fa";
-import { FaChevronUp } from "react-icons/fa";
+import { CustomSelect } from "src/components/CustomSelect";
+
 import {
   fetchBooks,
   fetchChapters,
   fetchVerses,
   fetchCompleteReference,
 } from "src/services/apiBiblia";
+import { Alternative } from "../../components/Alternative";
 
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
@@ -23,13 +24,6 @@ const AddQuestions = () => {
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
   const [bookId, setBookId] = useState("");
-
-  // Beginning of States of Custom Dropdown component
-
-  const [themeOption, setThemeOption] = useState("Selecione o tema");
-  const [isOpen, setIsOpen] = useState(false);
-
-  // End of States of Custom Dropdown component
 
   const {
     handleChange,
@@ -47,10 +41,10 @@ const AddQuestions = () => {
       temaId: 0, // MANAGED
       referencia: "",
       enunciado: "", // MANAGED
-      alternativas: {
-        texto: "",
-        correta: true,
-      },
+      alternativas: [
+        { texto: "exemplo1", correta: true },
+        { texto: "exemplo2", correta: false },
+      ],
     },
     validationSchema: null,
     onSubmit: async (values, actions) => {
@@ -165,28 +159,6 @@ const AddQuestions = () => {
     }
   };
 
-  // Beginning of Functions of Custom Dropdown component
-
-  const changeOption = (e) => {
-    const text = e.target.textContent;
-    const selectedValue = e.target.getAttribute("value");
-    setThemeOption(text);
-    setIsOpen((prevState) => {
-      !prevState;
-    });
-    setFieldValue("temaId", selectedValue);
-  };
-
-  const toggleMenu = () => {
-    setIsOpen((prevState) => !prevState);
-  };
-
-  useEffect(() => {
-    console.log(isOpen);
-  }, [isOpen]);
-
-  // End of Functions of Custom Dropdown component
-
   return (
     <Container>
       <Header />
@@ -202,39 +174,16 @@ const AddQuestions = () => {
                 <Title title="Adicionar Pergunta" />
                 <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
               </div>
-              {/* <select
-                name="temaId"
-                id="temaId"
-                value={values.temaId}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              >
-                <option value="">Selecione um tema</option>
-                {data.temas.map((tema) => (
-                  <option key={tema.id} value={tema.id}>
-                    {tema.nome} {`ID - ${tema.id}`}
-                  </option>
-                ))}
-              </select> */}
 
-              <SelectMenu $isopen={isOpen}>
-                <div className="selectBtn" onClick={toggleMenu}>
-                  <span>{themeOption}</span>
-                  {isOpen ? <FaChevronUp /> : <FaChevronDown />}
-                </div>
-                <ul>
-                  {themeOption == "Selecione o tema" ? (
-                    ""
-                  ) : (
-                    <li onClick={changeOption}>Selecione o tema</li>
-                  )}
-                  {data.temas.map((tema) => (
-                    <li onClick={changeOption} key={tema.id} value={tema.id}>
-                      {tema.nome}
-                    </li>
-                  ))}
-                </ul>
-              </SelectMenu>
+              <CustomSelect
+                options={data.temas}
+                selectedValue={
+                  data.temas.find((t) => t.id == values.temaId)?.nome ||
+                  "Selecione um tema"
+                }
+                onSelect={(option) => setFieldValue("temaId", option.id)}
+                placeholder="Selecione um tema"
+              />
 
               <textarea
                 name="enunciado"
@@ -295,7 +244,12 @@ const AddQuestions = () => {
                   <label htmlFor="RES">Resposta Simples</label>
                 </ContainerLabelInput>
               </div>
-              {values.tipoResposta === "MES" && <p>O TIPO É MES</p>}
+              {values.tipoResposta === "MES" && (
+                <>
+                  <h1>Adicionar Alternativas</h1>
+                  <Alternative content={"Foi José"} />
+                </>
+              )}
               {values.tipoResposta === "RCO" && <p>O TIPO É RCO</p>}
               {values.tipoResposta === "RES" && <p>O TIPO É RES</p>}
               {values.tipoResposta === "RLC" && <p>O TIPO É RLC</p>}
@@ -328,53 +282,46 @@ const AddQuestions = () => {
               </div>
               {values.referenciaBiblica === "true" ? (
                 <>
-                  <select name="books" id="books" onChange={handleBook}>
-                    <option value="">Selecione um livro...</option>
-                    {books.map((book) => {
-                      return (
-                        <option key={book.id} value={book.id}>
-                          {book.nome}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <select
-                    disabled={
-                      !values.referencia || !values.referencia.split(" ")[0]
+                  <CustomSelect
+                    options={books}
+                    selectedValue={
+                      books.find((b) => b.id == bookId)?.nome ||
+                      "Selecione um livro"
                     }
-                    name="chapters"
-                    id="chapters"
-                    onChange={handleChapter}
-                  >
-                    <option value="">Selecione um capítulo...</option>
-                    {chapters.map((chapter) => {
-                      return (
-                        <option key={chapter} value={chapter}>
-                          {chapter}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {values.tipoResposta === "RLC" ? (
-                    ""
-                  ) : (
-                    <select
-                      disabled={
-                        !values.referencia || !values.referencia.split(" ")[1]
+                    onSelect={(book) =>
+                      handleBook({ target: { value: book.id } })
+                    }
+                    placeholder="Selecione um livro"
+                  />
+                  <CustomSelect
+                    options={chapters.map((chapter) => ({
+                      id: chapter,
+                      nome: `${chapter}`,
+                    }))}
+                    selectedValue={
+                      values.referencia.split(" ")[1]?.split(":")[0] ||
+                      "Selecione um capítulo"
+                    }
+                    onSelect={(chapter) =>
+                      handleChapter({ target: { value: chapter.id } })
+                    }
+                    placeholder="Selecione um capítulo"
+                  />
+                  {values.tipoResposta !== "RLC" && (
+                    <CustomSelect
+                      options={verses.map((verse) => ({
+                        id: verse,
+                        nome: `${verse}`,
+                      }))}
+                      selectedValue={
+                        values.referencia.split(":")[1] ||
+                        "Selecione um versículo"
                       }
-                      name="verses"
-                      id="verses"
-                      onChange={handleVerse}
-                    >
-                      <option value="">Selecione um versículo...</option>
-                      {verses.map((verse) => {
-                        return (
-                          <option key={verse} value={verse}>
-                            {verse}
-                          </option>
-                        );
-                      })}
-                    </select>
+                      onSelect={(verse) =>
+                        handleVerse({ target: { value: verse.id } })
+                      }
+                      placeholder="Selecione um versículo"
+                    />
                   )}
                 </>
               ) : (
