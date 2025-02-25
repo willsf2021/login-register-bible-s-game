@@ -1,9 +1,9 @@
 import { Children } from "react";
 import Container from "./styles";
 
-export const Button = ({ type, children, disable }) => {
+export const Button = ({ type, children, disable, handler }) => {
   return (
-    <Container type={type} disabled={disable}>
+    <Container onClick={handler} type={type} disabled={disable}>
       {children}
     </Container>
   );

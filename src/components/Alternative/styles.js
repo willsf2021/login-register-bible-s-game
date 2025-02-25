@@ -5,16 +5,26 @@ export default styled.div`
   border: 1px solid #727376;
   border-radius: 5px;
   padding: 16px;
+  color: #9e9d97;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
   p {
-    font-size: 20px;
+    font-size: 16px;
+    line-height: 24px;
   }
   label {
-    font-size: 20px;
+    font-size: 16px;
   }
-
-  .trash {
-    width: 20px;
-    height: 20px;
+  .bottomAlternative {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .trash {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -23,7 +33,7 @@ export const CheckboxContainer = styled.label`
   align-items: center;
   cursor: pointer;
   position: relative;
-
+  column-gap: 8px;
   input:checked + span {
     background-color: ${(props) => props.theme.gradient.lighterBlue};
     border-color: ${(props) => props.theme.gradient.lighterBlue};
@@ -42,9 +52,9 @@ export const CheckboxContainer = styled.label`
     position: absolute;
     display: none;
     left: 8px;
-    top: 1px;
-    width: 8px;
-    height: 16px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
     border-bottom: 4px solid #fff;
     border-right: 4px solid #fff;
     border-radius: 0 2px 2px 0;
@@ -54,11 +64,14 @@ export const CheckboxContainer = styled.label`
     display: block;
   }
 `;
-export const Label = styled.label``;
+export const Label = styled.label`
+  cursor: pointer;
+`;
 export const CheckMark = styled.span`
   display: inline-block;
-  width: 28px;
-  height: 28px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
   background-color: white;
   border-radius: 5px;
   transition: backgroud-color 0.3s;

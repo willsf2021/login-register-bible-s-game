@@ -17,6 +17,7 @@ import {
   fetchCompleteReference,
 } from "src/services/apiBiblia";
 import { Alternative } from "../../components/Alternative";
+import { Footer } from "../../components/Footer";
 
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
@@ -24,7 +25,9 @@ const AddQuestions = () => {
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
   const [bookId, setBookId] = useState("");
+  const [alternativeContent, setAlternativeContent] = useState("");
 
+  const [textReference, setTextReference] = useState("");
   const {
     handleChange,
     handleBlur,
@@ -41,10 +44,7 @@ const AddQuestions = () => {
       temaId: 0, // MANAGED
       referencia: "",
       enunciado: "", // MANAGED
-      alternativas: [
-        { texto: "exemplo1", correta: true },
-        { texto: "exemplo2", correta: false },
-      ],
+      alternativas: [],
     },
     validationSchema: null,
     onSubmit: async (values, actions) => {
@@ -73,7 +73,7 @@ const AddQuestions = () => {
         fetchCompleteReference(abrev, chapterNumber, verseNumber).then(
           (response) => {
             response.map((res) => {
-              console.log(res.texto);
+              setTextReference(res.texto);
             });
           }
         );
@@ -158,6 +158,32 @@ const AddQuestions = () => {
       return;
     }
   };
+
+  const addAlternative = () => {
+    const newAlternative = { texto: alternativeContent, correta: false };
+    setFieldValue("alternativas", [...values.alternativas, newAlternative]);
+    setAlternativeContent("");
+  };
+
+  const deleteAlternative = (index) => {
+    setFieldValue(
+      "alternativas",
+      values.alternativas.filter((_, i) => i !== index)
+    );
+  };
+
+  const toggleCorrect = (index) => {
+    setFieldValue(
+      "alternativas",
+      values.alternativas.map((alt, i) => ({
+        ...alt,
+        correta: i === index,
+      }))
+    );
+  };
+  useEffect(() => {
+    console.log(alternativeContent);
+  }, [alternativeContent]);
 
   return (
     <Container>
@@ -245,16 +271,43 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.tipoResposta === "MES" && (
-                <>
-                  <h1>Adicionar Alternativas</h1>
-                  <Alternative content={"Foi José"} />
-                </>
+                <div className="selectBibleContainer">
+                  <h2>Adicionar Alternativas</h2>
+                  <textarea
+                    placeholder="Descreva a alternativa e clique em adicionar, assinale a alternativa que deve ficar como correta."
+                    value={alternativeContent}
+                    onChange={(e) => {
+                      setAlternativeContent(e.target.value);
+                    }}
+                  ></textarea>
+                  <Button
+                    type={"button"}
+                    handler={addAlternative}
+                    children="Adicionar Alternativa"
+                  />
+                  {values.alternativas.map((alternative, index) => {
+                    return (
+                      <Alternative
+                        key={index}
+                        id={index}
+                        content={alternative.texto}
+                        deleteAlternative={deleteAlternative}
+                        toggleCorrect={toggleCorrect}
+                        isChecked={alternative.correta}
+                      />
+                    );
+                  })}
+                </div>
               )}
               {values.tipoResposta === "RCO" && <p>O TIPO É RCO</p>}
               {values.tipoResposta === "RES" && <p>O TIPO É RES</p>}
               {values.tipoResposta === "RLC" && <p>O TIPO É RLC</p>}
               <div className="containerTipoReferencia">
-                <Title title="Referência" />
+                {values.tipoResposta === "RCO" ? (
+                  ""
+                ) : (
+                  <Title title="Referência" />
+                )}
                 <ContainerLabelInput>
                   <input
                     type="radio"
@@ -281,7 +334,7 @@ const AddQuestions = () => {
                 </ContainerLabelInput>
               </div>
               {values.referenciaBiblica === "true" ? (
-                <>
+                <div className="selectBibleContainer">
                   <CustomSelect
                     options={books}
                     selectedValue={
@@ -323,7 +376,12 @@ const AddQuestions = () => {
                       placeholder="Selecione um versículo"
                     />
                   )}
-                </>
+                  {values.tipoResposta === "RCO" && textReference ? (
+                    <Paragraph content={textReference} />
+                  ) : (
+                    ""
+                  )}
+                </div>
               ) : (
                 <div>
                   <textarea
@@ -343,9 +401,9 @@ const AddQuestions = () => {
           </>
         )}
       </main>
-      <footer>
+      <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>
-      </footer>
+      </Footer>
     </Container>
   );
 };

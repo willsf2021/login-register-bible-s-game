@@ -1,6 +1,7 @@
 export const colors = {
   primary: {
     textColor: "#858585",
+    titleColor: "#727272",
     switchButton: "#ccc",
     redError: " #ff6b6b",
     borderColor: "#727376",

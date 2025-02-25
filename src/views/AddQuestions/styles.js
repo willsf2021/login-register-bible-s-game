@@ -14,7 +14,18 @@ export default styled.div`
     height: 100vh;
     flex: 1;
     row-gap: 17px;
-
+    div.selectBibleContainer {
+      display: flex;
+      flex-direction: column;
+      row-gap: 12px;
+      h2 {
+        font-size: 20px;
+        color: ${(props) => props.theme.primary.textColor};
+        @media (min-width: 768px) {
+          font-size: 24px;
+        }
+      }
+    }
     div.containerTipoResposta {
       display: flex;
       flex-direction: column;
@@ -35,10 +46,18 @@ export default styled.div`
       }
     }
 
-    textarea,
-    select {
+    textarea {
       width: 100%;
       font-family: "Raleway", sans-serif;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: 5px;
+      border: 1px solid #727376;
+      min-height: 136px;
+      &:focus {
+        outline: none;
+        border-color: #727376;
+      }
     }
   }
 `;
@@ -87,4 +106,3 @@ export const ContainerLabelInput = styled.div`
     transform: translate(-50%, -50%) scale(0.6);
   }
 `;
-
