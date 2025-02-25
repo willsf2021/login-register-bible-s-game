@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { isReference, useQuery } from "@apollo/client";
 import { GET_TEMAS } from "src/services/api";
-import Container, { ContainerLabelInput } from "./styles";
+import Container, { ContainerLabelInput, SelectMenu } from "./styles";
 import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
 import { Header } from "src/components/Header";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
+import { FaChevronDown } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
 import {
   fetchBooks,
   fetchChapters,
@@ -21,6 +23,13 @@ const AddQuestions = () => {
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
   const [bookId, setBookId] = useState("");
+
+  // Beginning of States of Custom Dropdown component
+
+  const [themeOption, setThemeOption] = useState("Selecione o tema");
+  const [isOpen, setIsOpen] = useState(false);
+
+  // End of States of Custom Dropdown component
 
   const {
     handleChange,
@@ -156,6 +165,28 @@ const AddQuestions = () => {
     }
   };
 
+  // Beginning of Functions of Custom Dropdown component
+
+  const changeOption = (e) => {
+    const text = e.target.textContent;
+    const selectedValue = e.target.getAttribute("value");
+    setThemeOption(text);
+    setIsOpen((prevState) => {
+      !prevState;
+    });
+    setFieldValue("temaId", selectedValue);
+  };
+
+  const toggleMenu = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
+  useEffect(() => {
+    console.log(isOpen);
+  }, [isOpen]);
+
+  // End of Functions of Custom Dropdown component
+
   return (
     <Container>
       <Header />
@@ -171,7 +202,7 @@ const AddQuestions = () => {
                 <Title title="Adicionar Pergunta" />
                 <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
               </div>
-              <select
+              {/* <select
                 name="temaId"
                 id="temaId"
                 value={values.temaId}
@@ -184,7 +215,27 @@ const AddQuestions = () => {
                     {tema.nome} {`ID - ${tema.id}`}
                   </option>
                 ))}
-              </select>
+              </select> */}
+
+              <SelectMenu $isopen={isOpen}>
+                <div className="selectBtn" onClick={toggleMenu}>
+                  <span>{themeOption}</span>
+                  {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+                </div>
+                <ul>
+                  {themeOption == "Selecione o tema" ? (
+                    ""
+                  ) : (
+                    <li onClick={changeOption}>Selecione o tema</li>
+                  )}
+                  {data.temas.map((tema) => (
+                    <li onClick={changeOption} key={tema.id} value={tema.id}>
+                      {tema.nome}
+                    </li>
+                  ))}
+                </ul>
+              </SelectMenu>
+
               <textarea
                 name="enunciado"
                 id="enunciado"
