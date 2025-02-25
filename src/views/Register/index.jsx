@@ -159,11 +159,14 @@ export default function RegisterForm() {
               />
               <label htmlFor="terms">
                 Li e concordo com os{" "}
-                <a href="/termos-e-politicas?tab=termos-de-uso">
+                <a href="/termos-e-politicas?tab=termos-de-uso" target="_blank">
                   Termos de Uso{" "}
                 </a>
                 e
-                <a href="/termos-e-politicas?tab=politica-de-privacidade">
+                <a
+                  href="/termos-e-politicas?tab=politica-de-privacidade"
+                  target="_blank"
+                >
                   {" "}
                   Políticas de Privacidade
                 </a>
