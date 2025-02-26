@@ -11,6 +11,7 @@ export default createGlobalStyle`
     font-family: "Raleway", sans-serif;
     height: 100vh;
     background-color: ${colors.primary.backgroundDesktop};
+    overflow-y: visible;
   }
 
   textarea {

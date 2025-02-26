@@ -54,6 +54,7 @@ export default styled.div`
       justify-content: flex-end;
     }
   }
+
   div.checkbox {
     input {
       width: 28px;
@@ -99,6 +100,7 @@ export default styled.div`
       box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
       transition: background-color 0.3s ease-in-out;
       margin: 0 10px;
+      cursor: pointer;
     }
 
     .switch input {
@@ -117,6 +119,7 @@ export default styled.div`
       transition: all 0.3s ease-in-out;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       background-color: gray;
+      border-radius: 50%;
     }
 
     .switch input:checked + .slider {

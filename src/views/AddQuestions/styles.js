@@ -1,6 +1,19 @@
 import styled from "styled-components";
 
 export default styled.div`
+  p.textual {
+    font-size: 12px;
+    font-style: italic;
+    color: ${(props) => props.theme.primary.textColor};
+    padding: 4px 0 0 48px;
+    max-width: 320px;
+    line-height: 1.2rem;
+  }
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+  }
   max-width: 700px;
   background-color: ${(props) => props.theme.primary.white};
   margin: 0 auto;
@@ -68,9 +81,13 @@ export const ContainerLabelInput = styled.div`
   justify-content: flex-start;
   column-gap: 16px;
   color: ${(props) => props.theme.primary.textColor};
+  cursor: pointer;
   input {
     appearance: none;
     display: none;
+  }
+  label {
+    cursor: pointer;
   }
 
   label.customRadio {
