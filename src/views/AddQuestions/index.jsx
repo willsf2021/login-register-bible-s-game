@@ -19,6 +19,181 @@ import {
 import { Alternative } from "../../components/Alternative";
 import { Footer } from "../../components/Footer";
 
+// Componente para os inputs de referência bíblica
+const BibleReferenceInputs = ({
+  books,
+  bookId,
+  chapters,
+  verses,
+  values,
+  handleBook,
+  handleChapter,
+  handleVerse,
+  showVerse = true,
+  textReference,
+}) => (
+  <div className="selectBibleContainer">
+    <CustomSelect
+      options={books}
+      selectedValue={
+        books.find((b) => b.id == bookId)?.nome || "Selecione um livro"
+      }
+      onSelect={(book) => handleBook({ target: { value: book.id } })}
+      placeholder="Selecione um livro"
+    />
+    <CustomSelect
+      options={chapters.map((chapter) => ({ id: chapter, nome: `${chapter}` }))}
+      selectedValue={
+        values.referencia.split(" ")[1]?.split(":")[0] ||
+        "Selecione um capítulo"
+      }
+      onSelect={(chapter) => handleChapter({ target: { value: chapter.id } })}
+      placeholder="Selecione um capítulo"
+    />
+    {showVerse && (
+      <CustomSelect
+        options={verses.map((verse) => ({ id: verse, nome: `${verse}` }))}
+        selectedValue={
+          values.referencia.split(":")[1] || "Selecione um versículo"
+        }
+        onSelect={(verse) => handleVerse({ target: { value: verse.id } })}
+        placeholder="Selecione um versículo"
+      />
+    )}
+    {values.tipoResposta === "RCO" && textReference && (
+      <Paragraph content={textReference} />
+    )}
+  </div>
+);
+
+// Componente para alternativas de múltipla escolha
+const AlternativesSection = ({
+  alternativeContent,
+  setAlternativeContent,
+  values,
+  addAlternative,
+  deleteAlternative,
+  toggleCorrect,
+}) => (
+  <div className="selectBibleContainer">
+    <h2>Adicionar Alternativas</h2>
+    <textarea
+      placeholder="Descreva a alternativa e clique em adicionar, assinale a alternativa que deve ficar como correta."
+      value={alternativeContent}
+      onChange={(e) => setAlternativeContent(e.target.value)}
+    />
+    <Button
+      type={"button"}
+      handler={addAlternative}
+      children="Adicionar Alternativa"
+    />
+    {values.alternativas.map((alternative, index) => (
+      <Alternative
+        key={index}
+        id={index}
+        content={alternative.texto}
+        deleteAlternative={deleteAlternative}
+        toggleCorrect={toggleCorrect}
+        isChecked={alternative.correta}
+      />
+    ))}
+  </div>
+);
+
+// Componente para seleção do tipo de resposta
+const ResponseTypeSelector = ({ values, handleChange, handleBlur }) => (
+  <div className="containerTipoResposta">
+    <Title title="Resposta" />
+    <ContainerLabelInput>
+      <input
+        type="radio"
+        name="tipoResposta"
+        id="MES"
+        value="MES"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        checked={values.tipoResposta === "MES"}
+      />
+      <label htmlFor="MES" className="customRadio"></label>
+      <label htmlFor="MES">Múltipla Escolha</label>
+    </ContainerLabelInput>
+    <ContainerLabelInput>
+      <input
+        type="radio"
+        name="tipoResposta"
+        id="RCO"
+        value="RCO"
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+      <label htmlFor="RCO" className="customRadio"></label>
+      <label htmlFor="RCO">Referência Completa</label>
+    </ContainerLabelInput>
+    <ContainerLabelInput>
+      <input
+        type="radio"
+        name="tipoResposta"
+        id="RLC"
+        value="RLC"
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+      <label htmlFor="RLC" className="customRadio"></label>
+      <label htmlFor="RLC">Referência Livro-Capítulo</label>
+    </ContainerLabelInput>
+    <ContainerLabelInput>
+      <input
+        type="radio"
+        name="tipoResposta"
+        id="RES"
+        value="RES"
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+      <label htmlFor="RES" className="customRadio"></label>
+      <label htmlFor="RES">Resposta Simples</label>
+    </ContainerLabelInput>
+  </div>
+);
+
+// Componente para seleção do tipo de referência
+const ReferenceTypeSelector = ({ values, handleChange, handleBlur }) => (
+  <div className="containerTipoReferencia">
+    <Title title="Referência" />
+    <ContainerLabelInput>
+      <input
+        type="radio"
+        name="referenciaBiblica"
+        id="refBib"
+        value={true}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        checked={values.referenciaBiblica === "true"}
+      />
+      <label htmlFor="refBib" className="customRadio"></label>
+      <label htmlFor="refBib">Bíblica</label>
+    </ContainerLabelInput>
+    <div>
+      <ContainerLabelInput>
+        <input
+          type="radio"
+          name="referenciaBiblica"
+          id="refTex"
+          value={false}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <label htmlFor="refTex" className="customRadio"></label>
+        <label htmlFor="refTex">Textual (livros históricos)</label>
+      </ContainerLabelInput>
+      <p className="textual">
+        Perguntas sobre a história da Igreja ou da Bíblia devem ter referência
+        de onde foi extraído segundo o método de referência Vancouver
+      </p>
+    </div>
+  </div>
+);
+
 const AddQuestions = () => {
   const { loading, error, data } = useQuery(GET_TEMAS);
   const [books, setBooks] = useState([]);
@@ -26,8 +201,8 @@ const AddQuestions = () => {
   const [verses, setVerses] = useState([]);
   const [bookId, setBookId] = useState("");
   const [alternativeContent, setAlternativeContent] = useState("");
-
   const [textReference, setTextReference] = useState("");
+
   const {
     handleChange,
     handleBlur,
@@ -39,11 +214,11 @@ const AddQuestions = () => {
     setFieldValue,
   } = useFormik({
     initialValues: {
-      tipoResposta: "MES", // VALIDATED
+      tipoResposta: "MES",
       referenciaBiblica: "true",
-      temaId: 0, // VALIDATED
+      temaId: 0,
       referencia: "",
-      enunciado: "", // VALIDATED
+      enunciado: "",
       alternativas: [],
     },
     validationSchema,
@@ -77,13 +252,9 @@ const AddQuestions = () => {
             });
           }
         );
-      } else {
-        return;
       }
     }
   }, [values.referencia]);
-
-  console.log(values);
 
   useEffect(() => {
     if ((values.tipoResposta || values.referenciaBiblica) !== undefined) {
@@ -121,7 +292,6 @@ const AddQuestions = () => {
       setFieldValue("referencia", "");
       setChapters([]);
       setVerses([]);
-      return;
     }
   };
 
@@ -144,12 +314,11 @@ const AddQuestions = () => {
       });
     } else {
       setVerses([]);
-      return;
     }
   };
+
   const handleVerse = (event) => {
     const verseNumber = event.target.value;
-
     if (verseNumber) {
       const { referencia } = values;
       const referenceParts = referencia.split(" ");
@@ -161,8 +330,6 @@ const AddQuestions = () => {
             chapterAndVerse ? chapterAndVerse[0] : 1
           }:${verseNumber}`;
       setFieldValue("referencia", newReference, false);
-    } else {
-      return;
     }
   };
 
@@ -188,9 +355,6 @@ const AddQuestions = () => {
       }))
     );
   };
-  useEffect(() => {
-    console.log(alternativeContent);
-  }, [alternativeContent]);
 
   return (
     <Container>
@@ -201,315 +365,101 @@ const AddQuestions = () => {
         ) : error ? (
           <p>Erro ao carregar temas: {error.message}</p>
         ) : (
-          <>
-            <FormContainer onSubmit={handleSubmit}>
-              <div className="titleParagraph">
-                <Title title="Adicionar Pergunta" />
-                <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
-              </div>
-              <CustomSelect
-                options={data.temas}
-                selectedValue={
-                  data.temas.find((t) => t.id == values.temaId)?.nome ||
-                  "Selecione um tema"
-                }
-                onSelect={(option) => setFieldValue("temaId", option.id)}
-                placeholder="Selecione um tema"
+          <FormContainer onSubmit={handleSubmit}>
+            <div className="titleParagraph">
+              <Title title="Adicionar Pergunta" />
+              <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
+            </div>
+
+            <CustomSelect
+              options={data.temas}
+              selectedValue={
+                data.temas.find((t) => t.id == values.temaId)?.nome ||
+                "Selecione um tema"
+              }
+              onSelect={(option) => setFieldValue("temaId", option.id)}
+              placeholder="Selecione um tema"
+            />
+            {touched.temaId && errors.temaId && (
+              <div className="error-message">{errors.temaId}</div>
+            )}
+
+            <textarea
+              name="enunciado"
+              id="enunciado"
+              placeholder="Pergunta"
+              value={values.enunciado}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {touched.enunciado && errors.enunciado && (
+              <div className="error-message">{errors.enunciado}</div>
+            )}
+
+            <ResponseTypeSelector
+              values={values}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+            />
+
+            {/* Renderização condicional baseada no tipo de resposta */}
+            {(values.tipoResposta === "MES" ||
+              values.tipoResposta === "RES") && (
+              <>
+                {values.tipoResposta === "MES" && (
+                  <AlternativesSection
+                    alternativeContent={alternativeContent}
+                    setAlternativeContent={setAlternativeContent}
+                    values={values}
+                    addAlternative={addAlternative}
+                    deleteAlternative={deleteAlternative}
+                    toggleCorrect={toggleCorrect}
+                  />
+                )}
+
+                <ReferenceTypeSelector
+                  values={values}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                />
+              </>
+            )}
+
+            {/* Inputs de referência */}
+            {values.referenciaBiblica === "true" ? (
+              <BibleReferenceInputs
+                books={books}
+                bookId={bookId}
+                chapters={chapters}
+                verses={verses}
+                values={values}
+                handleBook={handleBook}
+                handleChapter={handleChapter}
+                handleVerse={handleVerse}
+                showVerse={values.tipoResposta !== "RLC"}
+                textReference={textReference}
               />
-              {touched.temaId && errors.temaId && (
-                <div className="error-message">{errors.temaId}</div>
-              )}
-              <textarea
-                name="enunciado"
-                id="enunciado"
-                placeholder="Pergunta"
-                value={values.enunciado}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              {touched.enunciado && errors.enunciado && (
-                <div className="error-message">{errors.enunciado}</div>
-              )}
-              {/* 
-                RESUMO RÁPIDO
-
-                Tipo MES:
-                  - Campo para Adicionar Alternativas
-                  - CARREGA Tipo de referência (Bíblica/Textual)
-                    -- Bíblica (Livros/Capítulo/Versículo)
-                    -- Textual (textarea para digitar)
-
-                Tipo RC:
-                  - NÃO CARREGA Tipo de Referência
-                  - Apenas Livro/Capítulo/Versículo
-
-                Tipo RLC:
-                  - NÃO CARREGA Tipo de Referência
-                  - Apenas Capítulo/Versículo
-
-                Tipo RES:
-                  - CARREGA Tipo de Referência (Bíblica/Textual)
-                    -- Bíblica (Livros/Capítulo/Versículo)
-                    -- Textual (textarea para digitar)
-
-
-                Como posso agrupar essa lógica?
-
-                  1º Note posso agrupar as opções que CARREGA/NÃO CARREGA o TIPO REFERÊNCIA
-
-                  -> MES e RES carregam o Tipo de Referência
-                   Única diferença entre eles é que:
-                    - MES carrega campo para adicionar alteranativas e RES não carrega:
-
-                    Esboço:
-
-                      if(RES || MES){
-                        ...CARREGA TIPO DE REFERENCIA...
-
-                            {LÓGICA TIPO REFERÊNCIA}
-
-                        IF (RES){
-                          ...CARREGA TAMBÉM CAMPO PARA ADICIONAR ALTERNATIVAS...
-                        }
-                      }
-
-                  LÓGICA TIPO REFERENCIA
-
-                    Esboço:
-
-                        if(refBiblica){
-                        ...inputs (livros/capítulos/versículos)
-                        } else if(refTextual) {
-                          ...inputs (textarea)
-                       }
-
-
-                 2º Os que não carregam o Tipo de Referência (RC e RLC) desacoplam a referência bíblica do Tipo referência:
-
-                  A única diferença entre eles é que:
-
-                    RC => CARREGA OS INPUTS (LIVROS/CAPÍTULOS E VERSÍCULOS)
-
-                    RLC => CARREGA OS INPUTS (LIVR/CAPÍTULOS)
-
-                    Esboço:
-
-                      if(RC){
-                        ...CARREGA INPUTS (LIVROS/CAPÍTULOS E VERSÍCULOS);
-                        } ELSE IF (RLC){
-                        ...CARREGA INPUTS (LIVROS/CAPÍTULOS);}
-
-
-
-                Como devo separar a lógica?
-
-                TIPO 
-
-                
-
-
-
-
-              
-              */}
-              <div className="containerTipoResposta">
-                <Title title="Resposta" />
-                <ContainerLabelInput>
-                  <input
-                    type="radio"
-                    name="tipoResposta"
-                    id="MES"
-                    value="MES"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    checked={values.tipoResposta === "MES"}
-                  />
-                  <label htmlFor="MES" className="customRadio"></label>
-                  <label htmlFor="MES">Múltipla Escolha</label>
-                </ContainerLabelInput>
-                <ContainerLabelInput>
-                  <input
-                    type="radio"
-                    name="tipoResposta"
-                    id="RCO"
-                    value="RCO"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="RCO" className="customRadio"></label>
-                  <label htmlFor="RCO">Referência Completa</label>
-                </ContainerLabelInput>
-                <ContainerLabelInput>
-                  <input
-                    type="radio"
-                    name="tipoResposta"
-                    id="RLC"
-                    value="RLC"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="RLC" className="customRadio"></label>
-                  <label htmlFor="RLC">Referência Livro-Capítulo</label>
-                </ContainerLabelInput>
-                <ContainerLabelInput>
-                  <input
-                    type="radio"
-                    name="tipoResposta"
-                    id="RES"
-                    value="RES"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="RES" className="customRadio"></label>
-                  <label htmlFor="RES">Resposta Simples</label>
-                </ContainerLabelInput>
+            ) : (
+              <div>
+                <textarea
+                  name="referencia"
+                  id="refTex"
+                  placeholder="Digite a referência aqui"
+                  value={values.referencia}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
               </div>
+            )}
 
-              <div className="refBiblica">
+            {touched.referencia && errors.referencia && (
+              <div className="error-message">{errors.referencia}</div>
+            )}
 
-              </div>
-              {(values.tipoResposta === "MES" ||
-                values.tipoResposta === "RES") && (
-                <>
-                  {values.tipoResposta === "MES" && (
-                    <div className="selectBibleContainer">
-                      <h2>Adicionar Alternativas</h2>
-                      <textarea
-                        placeholder="Descreva a alternativa e clique em adicionar, assinale a alternativa que deve ficar como correta."
-                        value={alternativeContent}
-                        onChange={(e) => {
-                          setAlternativeContent(e.target.value);
-                        }}
-                      ></textarea>
-                      <Button
-                        type={"button"}
-                        handler={addAlternative}
-                        children="Adicionar Alternativa"
-                      />
-                      {values.alternativas.map((alternative, index) => {
-                        return (
-                          <Alternative
-                            key={index}
-                            id={index}
-                            content={alternative.texto}
-                            deleteAlternative={deleteAlternative}
-                            toggleCorrect={toggleCorrect}
-                            isChecked={alternative.correta}
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="containerTipoReferencia">
-                    <Title title="Referência" />
-
-                    <ContainerLabelInput>
-                      <input
-                        type="radio"
-                        name="referenciaBiblica"
-                        id="refBib"
-                        value={true}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        checked={values.referenciaBiblica === "true"}
-                      />
-                      <label htmlFor="refBib" className="customRadio"></label>
-                      <label htmlFor="refBib">Bíblica</label>
-                    </ContainerLabelInput>
-                    <div>
-                      <ContainerLabelInput>
-                        <input
-                          type="radio"
-                          name="referenciaBiblica"
-                          id="refTex"
-                          value={false}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                        <label htmlFor="refTex" className="customRadio"></label>
-                        <label htmlFor="refTex">
-                          Textual (livros históricos)
-                        </label>
-                      </ContainerLabelInput>
-                      <p className="textual">
-                        Perguntas sobre a história da Igreja ou da Bíblia devem
-                        ter referência de onde foi extraído segundo o método de
-                        referência Vancouver
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
-              {values.referenciaBiblica === "true" ? (
-                <div className="selectBibleContainer">
-                  <CustomSelect
-                    options={books}
-                    selectedValue={
-                      books.find((b) => b.id == bookId)?.nome ||
-                      "Selecione um livro"
-                    }
-                    onSelect={(book) =>
-                      handleBook({ target: { value: book.id } })
-                    }
-                    placeholder="Selecione um livro"
-                  />
-                  <CustomSelect
-                    options={chapters.map((chapter) => ({
-                      id: chapter,
-                      nome: `${chapter}`,
-                    }))}
-                    selectedValue={
-                      values.referencia.split(" ")[1]?.split(":")[0] ||
-                      "Selecione um capítulo"
-                    }
-                    onSelect={(chapter) =>
-                      handleChapter({ target: { value: chapter.id } })
-                    }
-                    placeholder="Selecione um capítulo"
-                  />
-                  {values.tipoResposta !== "RLC" && (
-                    <CustomSelect
-                      options={verses.map((verse) => ({
-                        id: verse,
-                        nome: `${verse}`,
-                      }))}
-                      selectedValue={
-                        values.referencia.split(":")[1] ||
-                        "Selecione um versículo"
-                      }
-                      onSelect={(verse) =>
-                        handleVerse({ target: { value: verse.id } })
-                      }
-                      placeholder="Selecione um versículo"
-                    />
-                  )}
-                  {values.tipoResposta === "RCO" && textReference ? (
-                    <Paragraph content={textReference} />
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <textarea
-                    name="referencia"
-                    id="refTex"
-                    placeholder="Digite a referência aqui"
-                    value={values.referencia}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
-              )}
-              {touched.referencia && errors.referencia && (
-                <div className="error-message">{errors.referencia}</div>
-              )}
-              <div className="containerButton">
-                <Button type="submit">Enviar</Button>
-              </div>
-            </FormContainer>
-          </>
+            <div className="containerButton">
+              <Button type="submit">Enviar</Button>
+            </div>
+          </FormContainer>
         )}
       </main>
       <Footer>
