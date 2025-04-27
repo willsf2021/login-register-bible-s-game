@@ -39,14 +39,16 @@ const AddQuestions = () => {
     setFieldValue,
   } = useFormik({
     initialValues: {
-      tipoResposta: "MES",
+      tipoResposta: "MES", // VALIDATED
       referenciaBiblica: "true",
-      temaId: 0,
+      temaId: 0, // VALIDATED
       referencia: "",
-      enunciado: "",
+      enunciado: "", // VALIDATED
       alternativas: [],
     },
     validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values, actions) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       actions.resetForm();
@@ -94,7 +96,6 @@ const AddQuestions = () => {
       setVerses([]);
       setTextReference("");
     }
-    console.log(values);
   }, [values.tipoResposta, values.referenciaBiblica]);
 
   const handleBook = (event) => {
@@ -206,7 +207,6 @@ const AddQuestions = () => {
                 <Title title="Adicionar Pergunta" />
                 <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
               </div>
-
               <CustomSelect
                 options={data.temas}
                 selectedValue={
@@ -216,7 +216,7 @@ const AddQuestions = () => {
                 onSelect={(option) => setFieldValue("temaId", option.id)}
                 placeholder="Selecione um tema"
               />
-              {errors.temaId && (
+              {touched.temaId && errors.temaId && (
                 <div className="error-message">{errors.temaId}</div>
               )}
               <textarea
@@ -227,9 +227,91 @@ const AddQuestions = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.enunciado && (
+              {touched.enunciado && errors.enunciado && (
                 <div className="error-message">{errors.enunciado}</div>
               )}
+              {/* 
+                RESUMO RÁPIDO
+
+                Tipo MES:
+                  - Campo para Adicionar Alternativas
+                  - CARREGA Tipo de referência (Bíblica/Textual)
+                    -- Bíblica (Livros/Capítulo/Versículo)
+                    -- Textual (textarea para digitar)
+
+                Tipo RC:
+                  - NÃO CARREGA Tipo de Referência
+                  - Apenas Livro/Capítulo/Versículo
+
+                Tipo RLC:
+                  - NÃO CARREGA Tipo de Referência
+                  - Apenas Capítulo/Versículo
+
+                Tipo RES:
+                  - CARREGA Tipo de Referência (Bíblica/Textual)
+                    -- Bíblica (Livros/Capítulo/Versículo)
+                    -- Textual (textarea para digitar)
+
+
+                Como posso agrupar essa lógica?
+
+                  1º Note posso agrupar as opções que CARREGA/NÃO CARREGA o TIPO REFERÊNCIA
+
+                  -> MES e RES carregam o Tipo de Referência
+                   Única diferença entre eles é que:
+                    - MES carrega campo para adicionar alteranativas e RES não carrega:
+
+                    Esboço:
+
+                      if(RES || MES){
+                        ...CARREGA TIPO DE REFERENCIA...
+
+                            {LÓGICA TIPO REFERÊNCIA}
+
+                        IF (RES){
+                          ...CARREGA TAMBÉM CAMPO PARA ADICIONAR ALTERNATIVAS...
+                        }
+                      }
+
+                  LÓGICA TIPO REFERENCIA
+
+                    Esboço:
+
+                        if(refBiblica){
+                        ...inputs (livros/capítulos/versículos)
+                        } else if(refTextual) {
+                          ...inputs (textarea)
+                       }
+
+
+                 2º Os que não carregam o Tipo de Referência (RC e RLC) desacoplam a referência bíblica do Tipo referência:
+
+                  A única diferença entre eles é que:
+
+                    RC => CARREGA OS INPUTS (LIVROS/CAPÍTULOS E VERSÍCULOS)
+
+                    RLC => CARREGA OS INPUTS (LIVR/CAPÍTULOS)
+
+                    Esboço:
+
+                      if(RC){
+                        ...CARREGA INPUTS (LIVROS/CAPÍTULOS E VERSÍCULOS);
+                        } ELSE IF (RLC){
+                        ...CARREGA INPUTS (LIVROS/CAPÍTULOS);}
+
+
+
+                Como devo separar a lógica?
+
+                TIPO 
+
+                
+
+
+
+
+              
+              */}
               <div className="containerTipoResposta">
                 <Title title="Resposta" />
                 <ContainerLabelInput>
@@ -282,6 +364,10 @@ const AddQuestions = () => {
                   <label htmlFor="RES">Resposta Simples</label>
                 </ContainerLabelInput>
               </div>
+
+              <div className="refBiblica">
+
+              </div>
               {(values.tipoResposta === "MES" ||
                 values.tipoResposta === "RES") && (
                 <>
@@ -314,10 +400,10 @@ const AddQuestions = () => {
                       })}
                     </div>
                   )}
-                  
+
                   <div className="containerTipoReferencia">
                     <Title title="Referência" />
-                    
+
                     <ContainerLabelInput>
                       <input
                         type="radio"
@@ -415,6 +501,9 @@ const AddQuestions = () => {
                     onBlur={handleBlur}
                   />
                 </div>
+              )}
+              {touched.referencia && errors.referencia && (
+                <div className="error-message">{errors.referencia}</div>
               )}
               <div className="containerButton">
                 <Button type="submit">Enviar</Button>
