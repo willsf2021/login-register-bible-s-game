@@ -1,49 +1,92 @@
-import * as Yup from "yup";
+import * as yup from "yup";
 
-const getBiblicalError = (value, tipoResposta) => {
-  const [livro, resto] = value ? value.split(" ") : [null, null];
-  const [capitulo, versiculo] = resto ? resto.split(":") : [null, null];
+const validationSchema = yup.object().shape({
+  temaId: yup
+    .number()
+    .min(1, "Selecione um tema!")
+    .required("Campo obrigatório"),
 
-  if (!livro) return "Selecione o livro";
-  if (!capitulo) return "Selecione o capítulo";
-  if (tipoResposta !== "RLC" && !versiculo) return "Selecione o versículo";
-  return "Referência bíblica incompleta";
-};
+  enunciado: yup
+    .string()
+    .min(15, "Mínimo de 15 caracteres!")
+    .required("Campo obrigatório"),
 
-const validationSchema = Yup.object({
-  temaId: Yup.number()
-    .required("Selecione um tema")
-    .min(1, "Selecione um tema"),
+  tipoResposta: yup
+    .string()
+    .oneOf(["MES", "RCO", "RLC", "RES"])
+    .required("Selecione um tipo!"),
 
-  enunciado: Yup.string()
-    .required("O enunciado é obrigatório")
-    .min(10, "O enunciado deve ter pelo menos 10 caracteres")
-    .max(500, "O enunciado não pode ter mais de 500 caracteres"),
+  referenciaBiblica: yup
+    .string()
+    .oneOf(["true", "false"])
+    .required("Selecione um tipo de referência!")
+    .test(
+      "tipo-referencia",
+      "Tipo de referência é obrigatório!",
+      function (value) {
+        const tipoResposta = this.parent.tipoResposta;
+        if (tipoResposta === "RCO" || tipoResposta === "RLC") {
+          return value === "true";
+        }
 
-  referencia: Yup.string().when(
-    ["referenciaBiblica", "tipoResposta"],
-    (refBiblica, tipoResposta, schema) => {
-      if (refBiblica) {
-        return schema
-          .required("Referência bíblica é obrigatória")
-          .test("biblica-completa", function (value) {
-            if (!value)
-              return this.createError({
-                message: "Preencha a referência bíblica",
-              });
-
-            const errorMessage = getBiblicalError(value, tipoResposta);
-            const isValid = !errorMessage.startsWith("Selecione");
-
-            return isValid || this.createError({ message: errorMessage });
-          });
+        return true;
       }
+    ),
+
+  referencia: yup
+    .string()
+    .required("Referência obrigatória")
+    .test("valida-referencia", function (value) {
+      const { tipoResposta, referenciaBiblica } = this.parent;
+
+      if (referenciaBiblica === "true") {
+        if (tipoResposta === "RLC") {
+          const rlcPattern = /^[A-Za-z0-9]+\s\d+$/;
+          if (!rlcPattern.test(value || "")) {
+            return this.createError({
+              message: "Selecione um Livro e um Capítulo",
+            });
+          }
+        } else {
+          const rcoPattern = /^[A-Za-z0-9]+\s\d+:\d+$/;
+          if (!rcoPattern.test(value || "")) {
+            return this.createError({
+              message: "Selecione um Livro, um Capítulo e um Versículo",
+            });
+          }
+        }
+      } else {
+        if (
+          typeof value !== "string" ||
+          value.length < 10 ||
+          !/[a-zA-Z]/.test(value)
+        ) {
+          return this.createError({
+            message: "Mínimo de 10 caracteres.",
+          });
+        }
+      }
+
+      return true;
+    }),
+
+  alternativas: yup.array().when("tipoResposta", (tipoResposta, schema) => {
+    if (tipoResposta == "MES") {
       return schema
-        .required("Referência textual é obrigatória")
-        .min(10, "A referência textual deve ter pelo menos 10 caracteres")
-        .max(1000, "A referência textual não pode exceder 1000 caracteres");
+        .min(2, "Mínimo 2 alternativas")
+        .test(
+          "uma-correta",
+          "Selecione 1 alternativa correta",
+          (values) => values && values.some((alt) => alt.correta)
+        )
+        .test(
+          "texto-alternativas",
+          "Todas alternativas devem ter texto",
+          (values) => values && values.every((alt) => alt.texto.trim() !== "")
+        );
     }
-  ),
+    return schema;
+  }),
 });
 
 export default validationSchema;

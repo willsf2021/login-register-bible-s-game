@@ -10,7 +10,7 @@ import { CustomSelect } from "src/components/CustomSelect";
 import validationSchema from "./validationSchema";
 import { GET_TEMAS } from "src/services/api";
 import { REGISTER_QUESTION } from "src/services/api";
-import { isReference, useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   fetchBooks,
   fetchChapters,
@@ -32,6 +32,8 @@ const BibleReferenceInputs = ({
   handleVerse,
   showVerse = true,
   textReference,
+  touched,
+  errors,
 }) => (
   <div className="selectBibleContainer">
     <CustomSelect
@@ -64,6 +66,9 @@ const BibleReferenceInputs = ({
     {values.tipoResposta === "RCO" && textReference && (
       <Paragraph content={textReference} />
     )}
+    {touched.referencia && errors.referencia && (
+      <div className="error-message">{errors.referencia}</div>
+    )}
   </div>
 );
 
@@ -75,6 +80,8 @@ const AlternativesSection = ({
   addAlternative,
   deleteAlternative,
   toggleCorrect,
+  touched,
+  errors,
 }) => (
   <div className="selectBibleContainer">
     <h2>Adicionar Alternativas</h2>
@@ -98,11 +105,20 @@ const AlternativesSection = ({
         isChecked={alternative.correta}
       />
     ))}
+    {touched.alternativas && errors.alternativas && (
+      <div className="error-message">{errors.alternativas}</div>
+    )}
   </div>
 );
 
 // Componente para seleção do tipo de resposta
-const ResponseTypeSelector = ({ values, handleChange, handleBlur }) => (
+const ResponseTypeSelector = ({
+  values,
+  handleChange,
+  handleBlur,
+  touched,
+  errors,
+}) => (
   <div className="containerTipoResposta">
     <Title title="Resposta" />
     <ContainerLabelInput>
@@ -154,11 +170,21 @@ const ResponseTypeSelector = ({ values, handleChange, handleBlur }) => (
       <label htmlFor="RES" className="customRadio"></label>
       <label htmlFor="RES">Resposta Simples</label>
     </ContainerLabelInput>
+    {touched.tipoResposta && errors.tipoResposta && (
+      <div className="error-message">{errors.tipoResposta}</div>
+    )}
   </div>
 );
 
 // Componente para seleção do tipo de referência
-const ReferenceTypeSelector = ({ values, handleChange, handleBlur }) => (
+const ReferenceTypeSelector = ({
+  disabled,
+  values,
+  handleChange,
+  handleBlur,
+  touched,
+  errors,
+}) => (
   <div className="containerTipoReferencia">
     <Title title="Referência" />
     <ContainerLabelInput>
@@ -166,9 +192,10 @@ const ReferenceTypeSelector = ({ values, handleChange, handleBlur }) => (
         type="radio"
         name="referenciaBiblica"
         id="refBib"
-        value={true}
+        value="true"
         onChange={handleChange}
         onBlur={handleBlur}
+        disabled={disabled}
         checked={values.referenciaBiblica === "true"}
       />
       <label htmlFor="refBib" className="customRadio"></label>
@@ -180,8 +207,9 @@ const ReferenceTypeSelector = ({ values, handleChange, handleBlur }) => (
           type="radio"
           name="referenciaBiblica"
           id="refTex"
-          value={false}
+          value="false"
           onChange={handleChange}
+          disabled={disabled}
           onBlur={handleBlur}
         />
         <label htmlFor="refTex" className="customRadio"></label>
@@ -192,6 +220,9 @@ const ReferenceTypeSelector = ({ values, handleChange, handleBlur }) => (
         de onde foi extraído segundo o método de referência Vancouver
       </p>
     </div>
+    {touched.referenciaBiblica && errors.referenciaBiblica && (
+      <div className="error-message">{errors.referenciaBiblica}</div>
+    )}
   </div>
 );
 
@@ -206,29 +237,18 @@ const AddQuestions = () => {
 
   const [cadastrarPergunta] = useMutation(REGISTER_QUESTION);
 
-  const handleSubmit = async (values, actions) => {
-    try {
-      const { data } = await cadastrarPergunta({
-        variables: {
-          novaPergunta: values,
-        },
-      });
-
-      console.log("Pergunta cadastrada:", data.cadastrarPergunta.pergunta.id);
-      actions.resetForm();
-    } catch (err) {
-      console.error("Erro ao cadastrar pergunta:", err);
-    }
-  };
-
   const {
-    handleChange,
+    handleChange: formikHandleChange,
     handleBlur,
+    handleSubmit,
     values,
     errors,
     touched,
-    isSubmitting,
+    validateField,
     setFieldValue,
+    setFieldTouched,
+    validateForm,
+    isSubmitting,
   } = useFormik({
     initialValues: {
       tipoResposta: "MES",
@@ -241,8 +261,76 @@ const AddQuestions = () => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: { handleSubmit },
+    onSubmit: async (values, actions) => {
+      try {
+        values.referenciaBiblica =
+          values.referenciaBiblica === "true" ? true : false;
+        const { data } = await cadastrarPergunta({
+          variables: {
+            novaPergunta: values,
+          },
+        });
+
+        console.log("Pergunta cadastrada:", data.cadastrarPergunta.pergunta.id);
+        actions.resetForm();
+      } catch (err) {
+        console.error("Erro ao cadastrar pergunta:", err);
+      }
+    },
   });
+  const handleChange = (e) => {
+    formikHandleChange(e);
+
+    if (e.target.name === "tipoResposta") {
+      handleResponseTypeChange(e.target.value);
+    }
+
+    if (e.target.name === "referenciaBiblica") {
+      handleReferenceTypeChange(e.target.value);
+    }
+  };
+
+  const resetReferenceFields = async () => {
+    await setFieldValue("referencia", "");
+    setBookId("");
+    setChapters([]);
+    setVerses([]);
+    setTextReference("");
+    setFieldTouched("referencia", false);
+  };
+
+  const handleResponseTypeChange = async (newType) => {
+    if (newType === "RCO" || newType === "RLC") {
+      await setFieldValue("referenciaBiblica", "true");
+    }
+    await resetReferenceFields();
+    setTimeout(() => validateField("referencia"), 100);
+  };
+
+  const handleReferenceTypeChange = async (newRefType) => {
+    await resetReferenceFields();
+    setTimeout(() => validateField("referencia"), 100);
+  };
+
+  useEffect(() => {
+    if (values.tipoResposta === "MES") {
+      const timer = setTimeout(() => {
+        validateField("alternativas");
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [values.alternativas, values.tipoResposta]);
+
+  useEffect(() => {
+    const validate = async () => {
+      await validateField("referencia");
+    };
+
+    if (values.tipoResposta || values.referenciaBiblica || values.referencia) {
+      const timer = setTimeout(validate, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [values.tipoResposta, values.referenciaBiblica, values.referencia]);
 
   useEffect(() => {
     fetchBooks().then((data) => {
@@ -252,7 +340,7 @@ const AddQuestions = () => {
 
   useEffect(() => {
     const { referencia } = values;
-    if (referencia) {
+    if (referencia && values.referenciaBiblica === "true") {
       const regex = /^([A-Za-z0-9]+)\s+(\d+):(\d+)$/;
       const match = referencia.match(regex);
       if (match) {
@@ -268,20 +356,7 @@ const AddQuestions = () => {
         );
       }
     }
-  }, [values.referencia]);
-
-  useEffect(() => {
-    if ((values.tipoResposta || values.referenciaBiblica) !== undefined) {
-      if (values.tipoResposta === "RCO" || values.tipoResposta === "RLC") {
-        setFieldValue("referenciaBiblica", "true");
-      }
-      setFieldValue("referencia", "");
-      setBookId([]);
-      setChapters([]);
-      setVerses([]);
-      setTextReference("");
-    }
-  }, [values.tipoResposta, values.referenciaBiblica]);
+  }, [values.referencia, values.referenciaBiblica]);
 
   const handleBook = (event) => {
     const currentBookId = event.target.value;
@@ -289,19 +364,22 @@ const AddQuestions = () => {
     if (currentBookId) {
       setChapters([]);
       setVerses([]);
-      const selectedBook = books.find((book) => book.id == currentBookId).abrev;
-      const newReference = `${selectedBook}`;
-      setFieldValue("referencia", newReference);
-      setBookId(currentBookId);
+      const selectedBook = books.find((book) => book.id == currentBookId);
+      if (selectedBook) {
+        const newReference = `${selectedBook.abrev}`;
+        setFieldValue("referencia", newReference);
+        setFieldTouched("referencia", true);
+        setBookId(currentBookId);
 
-      fetchChapters(currentBookId).then((total) => {
-        total = Number(total);
-        const temp = [];
-        for (let i = 1; i <= total; i++) {
-          temp.push(i);
-        }
-        setChapters(temp);
-      });
+        fetchChapters(currentBookId).then((total) => {
+          total = Number(total);
+          const temp = [];
+          for (let i = 1; i <= total; i++) {
+            temp.push(i);
+          }
+          setChapters(temp);
+        });
+      }
     } else {
       setFieldValue("referencia", "");
       setChapters([]);
@@ -317,6 +395,7 @@ const AddQuestions = () => {
       const { referencia } = values;
       const newReference = `${referencia.split(" ")[0]} ${chapterNumber}`;
       setFieldValue("referencia", newReference);
+      setFieldTouched("referencia", true);
 
       fetchVerses(bookId, chapterNumber).then((total) => {
         total = Number(total);
@@ -343,13 +422,18 @@ const AddQuestions = () => {
         : `${bookAbbreviation} ${
             chapterAndVerse ? chapterAndVerse[0] : 1
           }:${verseNumber}`;
-      setFieldValue("referencia", newReference, false);
+      setFieldValue("referencia", newReference);
+      setFieldTouched("referencia", true);
     }
   };
 
   const addAlternative = () => {
+    if (alternativeContent.trim() === "") {
+      return;
+    }
     const newAlternative = { texto: alternativeContent, correta: false };
     setFieldValue("alternativas", [...values.alternativas, newAlternative]);
+    setFieldTouched("alternativas", true);
     setAlternativeContent("");
   };
 
@@ -358,6 +442,7 @@ const AddQuestions = () => {
       "alternativas",
       values.alternativas.filter((_, i) => i !== index)
     );
+    setFieldTouched("alternativas", true);
   };
 
   const toggleCorrect = (index) => {
@@ -368,6 +453,21 @@ const AddQuestions = () => {
         correta: i === index,
       }))
     );
+    setFieldTouched("alternativas", true);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = await validateForm();
+
+    if (Object.keys(errors).length === 0) {
+      handleSubmit(e);
+    } else {
+      Object.keys(errors).forEach((field) => {
+        setFieldTouched(field, true);
+      });
+    }
   };
 
   return (
@@ -379,19 +479,21 @@ const AddQuestions = () => {
         ) : error ? (
           <p>Erro ao carregar temas: {error.message}</p>
         ) : (
-          <FormContainer onSubmit={handleSubmit}>
+          <FormContainer onSubmit={handleFormSubmit}>
             <div className="titleParagraph">
               <Title title="Adicionar Pergunta" />
               <Paragraph content="Para começar a colaborar cadastre-se com seus dados abaixo e comece a enviar perguntas." />
             </div>
-
             <CustomSelect
               options={data.temas}
               selectedValue={
                 data.temas.find((t) => t.id == values.temaId)?.nome ||
                 "Selecione um tema"
               }
-              onSelect={(option) => setFieldValue("temaId", option.id)}
+              onSelect={(option) => {
+                setFieldValue("temaId", option.id);
+                setFieldTouched("temaId", true);
+              }}
               placeholder="Selecione um tema"
             />
             {touched.temaId && errors.temaId && (
@@ -414,9 +516,10 @@ const AddQuestions = () => {
               values={values}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              touched={touched}
+              errors={errors}
             />
 
-            {/* Renderização condicional baseada no tipo de resposta */}
             {(values.tipoResposta === "MES" ||
               values.tipoResposta === "RES") && (
               <>
@@ -428,18 +531,22 @@ const AddQuestions = () => {
                     addAlternative={addAlternative}
                     deleteAlternative={deleteAlternative}
                     toggleCorrect={toggleCorrect}
+                    touched={touched}
+                    errors={errors}
                   />
                 )}
 
                 <ReferenceTypeSelector
                   values={values}
+                  disabled={["RCO", "RLC"].includes(values.tipoResposta)}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  touched={touched}
+                  errors={errors}
                 />
               </>
             )}
 
-            {/* Inputs de referência */}
             {values.referenciaBiblica === "true" ? (
               <BibleReferenceInputs
                 books={books}
@@ -452,32 +559,35 @@ const AddQuestions = () => {
                 handleVerse={handleVerse}
                 showVerse={values.tipoResposta !== "RLC"}
                 textReference={textReference}
+                touched={touched}
+                errors={errors}
               />
             ) : (
               <div>
                 <textarea
                   name="referencia"
                   id="refTex"
-                  placeholder="Digite a referência aqui"
+                  placeholder="Digite a referência aqui (mínimo 10 caracteres)"
                   value={values.referencia}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+                {touched.referencia && errors.referencia && (
+                  <div className="error-message">{errors.referencia}</div>
+                )}
               </div>
             )}
 
-            {touched.referencia && errors.referencia && (
-              <div className="error-message">{errors.referencia}</div>
-            )}
-
             <div className="containerButton">
-              <Button type="submit">Enviar</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Enviando..." : "Enviar"}
+              </Button>
             </div>
           </FormContainer>
         )}
       </main>
       <Footer>
-        <p>Jogo da Bíblia &copy; 2022</p>
+        <p>Jogo da Bíblia &copy; {new Date().getFullYear()}</p>
       </Footer>
     </Container>
   );
