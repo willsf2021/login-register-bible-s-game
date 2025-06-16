@@ -3,7 +3,7 @@ import * as Yup from "yup";
 const getBiblicalError = (value, tipoResposta) => {
   const [livro, resto] = value ? value.split(" ") : [null, null];
   const [capitulo, versiculo] = resto ? resto.split(":") : [null, null];
-  
+
   if (!livro) return "Selecione o livro";
   if (!capitulo) return "Selecione o capítulo";
   if (tipoResposta !== "RLC" && !versiculo) return "Selecione o versículo";
@@ -20,17 +20,21 @@ const validationSchema = Yup.object({
     .min(10, "O enunciado deve ter pelo menos 10 caracteres")
     .max(500, "O enunciado não pode ter mais de 500 caracteres"),
 
-  referencia: Yup.string()
-    .when(["referenciaBiblica", "tipoResposta"], (refBiblica, tipoResposta, schema) => {
+  referencia: Yup.string().when(
+    ["referenciaBiblica", "tipoResposta"],
+    (refBiblica, tipoResposta, schema) => {
       if (refBiblica) {
         return schema
           .required("Referência bíblica é obrigatória")
-          .test('biblica-completa', function(value) {
-            if (!value) return this.createError({ message: "Preencha a referência bíblica" });
-            
+          .test("biblica-completa", function (value) {
+            if (!value)
+              return this.createError({
+                message: "Preencha a referência bíblica",
+              });
+
             const errorMessage = getBiblicalError(value, tipoResposta);
             const isValid = !errorMessage.startsWith("Selecione");
-            
+
             return isValid || this.createError({ message: errorMessage });
           });
       }
@@ -38,7 +42,8 @@ const validationSchema = Yup.object({
         .required("Referência textual é obrigatória")
         .min(10, "A referência textual deve ter pelo menos 10 caracteres")
         .max(1000, "A referência textual não pode exceder 1000 caracteres");
-    }),
+    }
+  ),
 });
 
 export default validationSchema;

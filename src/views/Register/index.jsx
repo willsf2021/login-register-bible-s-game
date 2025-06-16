@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
 import { Input } from "src/components/Input/index";
@@ -12,8 +13,10 @@ import { Footer } from "../../components/Footer";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
 
+
 export default function RegisterForm() {
   const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -27,37 +30,35 @@ export default function RegisterForm() {
       terms: false,
     },
     validationSchema,
-    onSubmit: async (
-      { name, phone, username, email, password, isWhatsapp },
-      { setFieldError }
-    ) => {
-      const requestData = {
-        name,
-        phone,
-        username,
-        email,
-        password,
-        isWhatsapp,
-      };
+    onSubmit: async (values, { setFieldError, resetForm }) => {
+      try {
 
-      const [cadastrarUsuario, { loading, data, error }] =
-        useMutation(REGISTER_USER);
+        const { confirmPassword, terms, ...usuarioInput } = values;
 
-      useEffect(() => {
-        if (error) {
-          if (error.graphQLErrors) {
-            error.graphQLErrors.forEach(({ message, extensions }) => {
-              const field = extensions?.field || "general";
-              formik.setFieldError(field, message);
-            });
-          } else {
-            formik.setFieldError(
-              "general",
-              error.message || "Erro desconhecido."
+        const { data } = await cadastrarUsuario({
+          variables: {
+            novoUsuario: usuarioInput,
+          },
+        });
+        if (data?.cadastrarUsuario) {
+          navigate("/login");
+          resetForm();
+        }
+      } catch (error) {
+        const graphQLErrors = error.graphQLErrors || [];
+
+        graphQLErrors.forEach((err) => {
+          if (err.extensions.code === "EMAIL_JA_CADASTRADO") {
+            setFieldError("email", "Este e-mail já está cadastrado");
+          }
+          if (err.extensions.code === "LOGIN_INDISPONIVEL") {
+            setFieldError(
+              "username",
+              "Este nome de usuário não está disponível"
             );
           }
-        }
-      }, [error]);
+        });
+      }
     },
   });
 

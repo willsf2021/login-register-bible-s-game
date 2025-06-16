@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { isReference, useQuery } from "@apollo/client";
-import { GET_TEMAS } from "src/services/api";
 import Container, { ContainerLabelInput } from "./styles";
 import { FormContainer } from "src/components/FormContainer";
 import { Button } from "src/components/Button";
@@ -10,6 +8,9 @@ import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
 import { CustomSelect } from "src/components/CustomSelect";
 import validationSchema from "./validationSchema";
+import { GET_TEMAS } from "src/services/api";
+import { REGISTER_QUESTION } from "src/services/api";
+import { isReference, useQuery, useMutation } from "@apollo/client";
 import {
   fetchBooks,
   fetchChapters,
@@ -203,6 +204,23 @@ const AddQuestions = () => {
   const [alternativeContent, setAlternativeContent] = useState("");
   const [textReference, setTextReference] = useState("");
 
+  const [cadastrarPergunta] = useMutation(REGISTER_QUESTION);
+
+  const handleSubmit = async (values, actions) => {
+    try {
+      const { data } = await cadastrarPergunta({
+        variables: {
+          novaPergunta: values,
+        },
+      });
+
+      console.log("Pergunta cadastrada:", data.cadastrarPergunta.pergunta.id);
+      actions.resetForm();
+    } catch (err) {
+      console.error("Erro ao cadastrar pergunta:", err);
+    }
+  };
+
   const {
     handleChange,
     handleBlur,
@@ -210,7 +228,6 @@ const AddQuestions = () => {
     errors,
     touched,
     isSubmitting,
-    handleSubmit,
     setFieldValue,
   } = useFormik({
     initialValues: {
@@ -224,10 +241,7 @@ const AddQuestions = () => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: async (values, actions) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      actions.resetForm();
-    },
+    onSubmit: { handleSubmit },
   });
 
   useEffect(() => {
