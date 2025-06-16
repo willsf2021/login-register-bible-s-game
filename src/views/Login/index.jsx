@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "src/assets/logo-vetor.png";
 import validationSchema from "./validationSchema";
 import Container from "./styles";
@@ -11,10 +12,13 @@ import { Input } from "src/components/Input";
 import { Title } from "src/components/Title";
 import { Paragraph } from "src/components/Paragraph/index";
 import { Footer } from "../../components/Footer";
+import { useFlash } from "../../contexts/FlashContext";
 
 export default function Login() {
   const [loginError, setLoginError] = useState(null);
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+  const { showFlash } = useFlash();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -39,17 +43,22 @@ export default function Login() {
   useEffect(() => {
     if (data) {
       const token = data.login.token;
-      console.log("Login realizado com sucesso:", data);
       localStorage.setItem("authToken", token);
       setLoginError(null);
+
+      showFlash("Login realizado com sucesso! Redirecionando...", "success");
+      // Lógica de redirecionamento
     }
+
     if (error) {
       console.error("Login falhou:", error);
       setLoginError(error.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
 
+      showFlash(error.message, "error");
+    }
+  }, [data, error, navigate, showFlash]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return (
     <Container>
       <header>
@@ -86,8 +95,6 @@ export default function Login() {
           </div>
           <a href="/cadastro">Cadastre-se</a>
         </FormContainer>
-
-        {loginError && <p style={{ color: "red" }}>{loginError}</p>}
       </main>
       <Footer>
         <p>Jogo da Bíblia &copy; 2022</p>

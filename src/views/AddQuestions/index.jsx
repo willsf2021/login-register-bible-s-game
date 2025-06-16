@@ -11,6 +11,7 @@ import validationSchema from "./validationSchema";
 import { GET_TEMAS } from "src/services/api";
 import { REGISTER_QUESTION } from "src/services/api";
 import { useQuery, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import {
   fetchBooks,
   fetchChapters,
@@ -19,6 +20,7 @@ import {
 } from "src/services/apiBiblia";
 import { Alternative } from "../../components/Alternative";
 import { Footer } from "../../components/Footer";
+import { useFlash } from "../../contexts/FlashContext";
 
 // Componente para os inputs de referência bíblica
 const BibleReferenceInputs = ({
@@ -227,6 +229,8 @@ const ReferenceTypeSelector = ({
 );
 
 const AddQuestions = () => {
+  const { showFlash } = useFlash();
+  const navigate = useNavigate();
   const { loading, error, data } = useQuery(GET_TEMAS);
   const [books, setBooks] = useState([]);
   const [chapters, setChapters] = useState([]);
@@ -270,11 +274,15 @@ const AddQuestions = () => {
             novaPergunta: values,
           },
         });
-
-        console.log("Pergunta cadastrada:", data.cadastrarPergunta.pergunta.id);
+        showFlash(
+          "Pergunta cadastrada com sucesso! Redirecionando...",
+          "success"
+        );
         actions.resetForm();
+        navigate("/"); // Lógica de redirecionamento
       } catch (err) {
         console.error("Erro ao cadastrar pergunta:", err);
+        showFlash(`Erro ao cadastrar: ${err.message}`, "error");
       }
     },
   });

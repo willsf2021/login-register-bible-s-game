@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import validationSchema from "./validationSchema";
@@ -10,13 +10,14 @@ import { Paragraph } from "src/components/Paragraph/index";
 import { FormContainer } from "../../components/FormContainer";
 import { Button } from "../../components/Button";
 import { Footer } from "../../components/Footer";
+import { useFlash } from "src/contexts/FlashContext";
 import { REGISTER_USER } from "src/services/api";
 import { useMutation } from "@apollo/client";
-
 
 export default function RegisterForm() {
   const [cadastrarUsuario, { loading }] = useMutation(REGISTER_USER);
   const navigate = useNavigate();
+  const { showFlash } = useFlash();
 
   const formik = useFormik({
     initialValues: {
@@ -32,7 +33,6 @@ export default function RegisterForm() {
     validationSchema,
     onSubmit: async (values, { setFieldError, resetForm }) => {
       try {
-
         const { confirmPassword, terms, ...usuarioInput } = values;
 
         const { data } = await cadastrarUsuario({
@@ -41,23 +41,18 @@ export default function RegisterForm() {
           },
         });
         if (data?.cadastrarUsuario) {
-          navigate("/login");
-          resetForm();
+          showFlash(
+            "Cadastro realizado com sucesso! Redirecionando para login...",
+            "success"
+          );
+
+          setTimeout(() => {
+            navigate("/login");
+            resetForm();
+          }, 3000);
         }
       } catch (error) {
-        const graphQLErrors = error.graphQLErrors || [];
-
-        graphQLErrors.forEach((err) => {
-          if (err.extensions.code === "EMAIL_JA_CADASTRADO") {
-            setFieldError("email", "Este e-mail já está cadastrado");
-          }
-          if (err.extensions.code === "LOGIN_INDISPONIVEL") {
-            setFieldError(
-              "username",
-              "Este nome de usuário não está disponível"
-            );
-          }
-        });
+        showFlash(error.message, "error");
       }
     },
   });
@@ -130,6 +125,7 @@ export default function RegisterForm() {
               Li e concordo com os <a href="#">Termos de Uso</a>
             </label>
           </div>
+          <a href="/login">Já possui conta? Faça o Login</a>
           {formik.errors.general && (
             <p style={{ color: "red" }}>{formik.errors.general}</p>
           )}

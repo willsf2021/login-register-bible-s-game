@@ -164,4 +164,21 @@ export default styled.div`
     font-weight: 500;
     display: block;
   }
+  a {
+    text-decoration: none;
+    color: ${(props) => props.theme.primary.links};
+    transition: all 0.3s ease;
+
+    &:visited {
+      color: ${(props) => props.theme.primary.textColor};
+    }
+
+    &:hover {
+      font-weight: 500;
+    }
+
+    &:active {
+      font-weight: normal;
+    }
+  }
 `;
